@@ -34,13 +34,13 @@ const RegisterForm = () => {
         }
         bottom={
             <>
-                <Button>
+                <Button colorScheme='blue'>
                     Registrarme
                 </Button>
 
                 <Text color='gray.600' align='center'>
                     ¿Ya tienes una cuenta?{' '}
-                    <Link to='/'>
+                    <Link to='/' color='blue.400'>
                         Iniciar sesión
                     </Link>
                 </Text>

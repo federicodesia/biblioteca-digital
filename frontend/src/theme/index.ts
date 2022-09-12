@@ -1,6 +1,9 @@
 import { extendTheme, withDefaultColorScheme } from '@chakra-ui/react'
 import { breakpoints } from './breakpoints'
 
+export const primaryColorScheme = 'teal'
+export const secondaryColorScheme = 'cyan'
+
 const theme = extendTheme(
     {
         breakpoints,
@@ -9,7 +12,7 @@ const theme = extendTheme(
             body: `Inter, system-ui, sans-serif`,
         }
     },
-    withDefaultColorScheme({ colorScheme: 'blue' })
+    withDefaultColorScheme({ colorScheme: primaryColorScheme })
 )
 
 export default theme

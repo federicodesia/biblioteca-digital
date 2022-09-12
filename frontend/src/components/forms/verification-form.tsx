@@ -21,13 +21,13 @@ const VerificationForm = () => {
         }
         bottom={
             <>
-                <Button>
+                <Button colorScheme='blue'>
                     Continuar
                 </Button>
 
                 <Text color='gray.600' align='center'>
                     ¿Ya tienes una cuenta?{' '}
-                    <Link to='/login'>
+                    <Link to='/login' color='blue.400'>
                         Iniciar sesión
                     </Link>
                 </Text>

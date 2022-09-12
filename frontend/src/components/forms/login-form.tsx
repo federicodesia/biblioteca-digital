@@ -22,13 +22,13 @@ const LoginForm = () => {
         }
         bottom={
             <>
-                <Button>
+                <Button colorScheme='blue'>
                     Iniciar sesión
                 </Button>
 
                 <Text color='gray.600' align='center'>
                     ¿No tienes una cuenta?{' '}
-                    <Link to='/verification'>
+                    <Link to='/verification' color='blue.400'>
                         Registrarme
                     </Link>
                 </Text>

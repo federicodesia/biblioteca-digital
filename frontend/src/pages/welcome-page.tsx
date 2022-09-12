@@ -1,5 +1,7 @@
 import { Stack, Flex, Box, Heading, Text, Icon, IconProps, useMediaQuery } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import UnderlinedText from '../components/underlined_text';
+import useColorScheme from '../hooks/use-color-scheme';
 import { up } from '../theme/breakpoints';
 
 interface WelcomePageProps {
@@ -7,6 +9,7 @@ interface WelcomePageProps {
 }
 
 const WelcomePage = ({ form }: WelcomePageProps) => {
+    const { secondaryScheme } = useColorScheme()
     const [upMd] = useMediaQuery(up('md'))
 
     return <Flex
@@ -30,23 +33,11 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
                     lineHeight={1.1}
                     fontWeight={600}
                     fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
-                    <Text
-                        as='span'
-                        position='relative'
-                        _after={{
-                            content: "''",
-                            width: 'full',
-                            height: '30%',
-                            position: 'absolute',
-                            bottom: 1,
-                            left: 0,
-                            bg: 'cyan.700',
-                            zIndex: -1,
-                        }}>
+                    <UnderlinedText color={secondaryScheme[700]}>
                         Biblioteca digital
-                    </Text>
+                    </UnderlinedText>
                     <br />
-                    <Text as='span' color='cyan.700'>
+                    <Text as='span' color={secondaryScheme[700]}>
                         Centro Universitario Chivilcoy
                     </Text>
                 </Heading>
@@ -73,7 +64,7 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
                             position='absolute'
                             top={6}
                             zIndex={-1}
-                            color='cyan.50' />
+                            color={secondaryScheme[50]} />
 
                         <Box
                             position='relative'

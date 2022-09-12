@@ -2,7 +2,7 @@ import { Link as ChakraLink, LinkProps as ChakraLinkProps } from '@chakra-ui/rea
 import { Link as ReactRouterLink, LinkProps as ReactRouterLinkProps } from 'react-router-dom';
 
 const Link = (props: ChakraLinkProps & ReactRouterLinkProps) => {
-    return <ChakraLink as={ReactRouterLink} color='blue.400' {...props} />
+    return <ChakraLink as={ReactRouterLink} textDecoration='none' {...props} />
 }
 
 export default Link
