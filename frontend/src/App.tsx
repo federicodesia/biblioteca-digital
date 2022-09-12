@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom"
 import LoginForm from "./components/forms/login-form"
 import RegisterForm from "./components/forms/register-form"
 import VerificationForm from "./components/forms/verification-form"
+import AccessCodesPage from "./pages/access-codes-page"
 import MainPage from "./pages/main-page"
 import WelcomePage from "./pages/welcome-page"
 
@@ -15,7 +16,7 @@ function App() {
 
       <Route path="/home" element={<MainPage />} />
       <Route path="/my-documents" element={<MainPage />} />
-      <Route path="/access-codes" element={<MainPage />} />
+      <Route path="/access-codes" element={<MainPage children={<AccessCodesPage />} />} />
       <Route path="/upload-requests" element={<MainPage />} />
     </Routes>
   )
