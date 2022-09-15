@@ -1,5 +1,6 @@
 import { Badge, Box, Button, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, useClipboard, useToast, VStack } from "@chakra-ui/react"
 import { FiClipboard, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi"
+import GenerateAccessCodeModal from "../components/modals/generate-access-code"
 import pluralize from "../utils/pluralize"
 
 type Status = 'Disponible' | 'Utilizado' | 'Expirado'
@@ -18,7 +19,7 @@ const accessCodes: AccessCode[] = [
     { code: '3USv5', role: 'Profesor', status: 'Utilizado', createdBy: 'Federico De Sía', createdAt: '12 sep. 2022 15:46 p.m.' },
     { code: 'Oj0CK', role: 'Alumno', status: 'Disponible', createdBy: 'Marcelo De Lillo', createdAt: '12 sep. 2022 15:46 p.m.', expiresIn: 3 },
     { code: 'tOml8', role: 'Alumno', status: 'Expirado', createdBy: 'Emmanuel Pagano', createdAt: '12 sep. 2022 15:46 p.m.' },
-    { code: 'tOml8', role: 'Alumno', status: 'Expirado', createdBy: 'Matías Schettino', createdAt: '12 sep. 2022 15:46 p.m.' },
+    { code: 'vGMjc', role: 'Alumno', status: 'Expirado', createdBy: 'Matías Schettino', createdAt: '12 sep. 2022 15:46 p.m.' },
 ]
 
 const AccessCodesPage = () => {
@@ -42,9 +43,11 @@ const AccessCodesPage = () => {
                         <Input type='text' placeholder='Buscar código o persona...' />
                     </InputGroup>
 
-                    <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
-                        Generar nuevo
-                    </Button>
+                    <GenerateAccessCodeModal trigger={
+                        <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+                            Generar nuevo
+                        </Button>
+                    } />
                 </HStack>
 
                 <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
