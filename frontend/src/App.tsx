@@ -4,6 +4,7 @@ import RegisterForm from "./components/forms/register-form"
 import VerificationForm from "./components/forms/verification-form"
 import AccessCodesPage from "./pages/access-codes-page"
 import MainPage from "./pages/main-page"
+import UsersPage from "./pages/users-page"
 import WelcomePage from "./pages/welcome-page"
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
 
       <Route path="/home" element={<MainPage />} />
       <Route path="/my-documents" element={<MainPage />} />
+      <Route path="/users" element={<MainPage children={<UsersPage />} />} />
       <Route path="/access-codes" element={<MainPage children={<AccessCodesPage />} />} />
       <Route path="/upload-requests" element={<MainPage />} />
     </Routes>
