@@ -11,3 +11,9 @@ html {
 *:after {
   box-sizing: inherit;
 }
+iframe{
+  object-fit: contain;
+ min-width: 300px; 
+min-width: 300px;
+
+}
