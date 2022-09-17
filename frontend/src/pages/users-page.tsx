@@ -1,7 +1,14 @@
-import { Avatar, Badge, Box, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tooltip, Tr, VStack } from "@chakra-ui/react"
+import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
+import Content from "../components/content"
+import TableActionButton from "../components/table-action-button"
 
 type Status = 'Activo' | 'Inhabilitado'
+const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
+    'Activo': 'green',
+    'Inhabilitado': 'red',
+}
+
 interface UserData {
     name: string
     lastname: string
@@ -22,54 +29,46 @@ const usersData: UserData[] = [
 ]
 
 const UsersPage = () => {
-    return <Box
-        position='absolute'
-        top='0'
-        left='0'
-        right='0'
-        p='8'>
+    return <Content>
+        <VStack align='stretch' spacing='8'>
 
-        <Box bg='white' p='8' rounded='xl' border='1px' borderColor='gray.200' >
-            <VStack align='stretch' spacing='8'>
+            <Heading size='md' fontWeight='600'>
+                Usuarios
+            </Heading>
 
-                <Heading size='md' fontWeight='600'>
-                    Usuarios
-                </Heading>
+            <InputGroup color='gray.600' maxW='400px'>
+                <InputLeftElement pointerEvents='none' children={<FiSearch />} />
+                <Input type='text' placeholder='Buscar por nombre, apellido o email...' />
+            </InputGroup>
 
-                <InputGroup color='gray.600' maxW='400px'>
-                    <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                    <Input type='text' placeholder='Buscar por nombre, apellido o email...' />
-                </InputGroup>
+            <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+                <Table colorScheme='gray' fontSize='15' >
+                    <Thead>
+                        <Tr>
+                            <Th>Nombre</Th>
+                            <Th>Tipo de usuario</Th>
+                            <Th textAlign='center'>Estado</Th>
+                            <Th>Correo electrónico</Th>
+                            <Th>Fecha de registro</Th>
+                            <Th>Invitado por</Th>
+                            <Th w='0' />
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {
+                            usersData.map((item, index) => {
+                                return <TableItem key={`${item.email} ${index}`} {...item} />
+                            })
+                        }
+                    </Tbody>
 
-                <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
-                    <Table colorScheme='gray' fontSize='15' >
-                        <Thead>
-                            <Tr>
-                                <Th>Nombre</Th>
-                                <Th>Tipo de usuario</Th>
-                                <Th textAlign='center'>Estado</Th>
-                                <Th>Correo electrónico</Th>
-                                <Th>Fecha de registro</Th>
-                                <Th>Invitado por</Th>
-                                <Th w='0' />
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {
-                                usersData.map((item, index) => {
-                                    return <TableItem key={`${item.email} ${index}`} {...item} />
-                                })
-                            }
-                        </Tbody>
-
-                        <TableCaption textAlign='left'>
-                            Mostrando {usersData.length} resultados
-                        </TableCaption>
-                    </Table>
-                </TableContainer>
-            </VStack>
-        </Box>
-    </Box>
+                    <TableCaption textAlign='left'>
+                        Mostrando {usersData.length} resultados
+                    </TableCaption>
+                </Table>
+            </TableContainer>
+        </VStack>
+    </Content>
 }
 
 const TableItem = (item: UserData) => {
@@ -85,17 +84,7 @@ const TableItem = (item: UserData) => {
         </Td>
         <Td>{item.role}</Td>
         <Td textAlign='center'>
-            <Badge
-                rounded='xl'
-                px='2'
-                py='2px'
-                fontWeight='600'
-                textTransform='lowercase'
-                colorScheme={
-                    isActive
-                        ? 'green'
-                        : 'red'
-                }>
+            <Badge colorScheme={statusColors[item.status]}>
                 {item.status}
             </Badge>
         </Td>
@@ -104,19 +93,9 @@ const TableItem = (item: UserData) => {
         <Td>{item.invitedBy ?? '-'}</Td>
 
         <Td>
-            <HStack spacing='2'>
-                <Tooltip openDelay={400} bg='white' p='4' rounded='lg' shadow='lg' label={isActive ? 'Inhabilitar cuenta' : 'Activar cuenta'}>
-                    <IconButton
-                        variant='ghost'
-                        colorScheme='gray'
-                        aria-label={isActive ? 'Inhabilitar cuenta' : 'Activar cuenta'}
-                        icon={
-                            isActive
-                                ? <FiLock />
-                                : <FiUnlock />
-                        } />
-                </Tooltip>
-            </HStack>
+            <TableActionButton
+                icon={isActive ? <FiLock /> : <FiUnlock />}
+                tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'} />
         </Td>
     </Tr>
 }

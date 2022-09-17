@@ -1,9 +1,17 @@
-import { Badge, Box, Button, Heading, HStack, IconButton, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tooltip, Tr, useClipboard, useToast, VStack } from "@chakra-ui/react"
+import { Badge, Button, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, ThemeTypings, Tr, useClipboard, useToast, VStack } from "@chakra-ui/react"
 import { FiClipboard, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi"
+import Content from "../components/content"
 import GenerateAccessCodeModal from "../components/modals/generate-access-code"
+import TableActionButton from "../components/table-action-button"
 import pluralize from "../utils/pluralize"
 
 type Status = 'Disponible' | 'Utilizado' | 'Expirado'
+const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
+    'Disponible': 'green',
+    'Utilizado': 'blue',
+    'Expirado': 'red'
+}
+
 interface AccessCode {
     code: string
     role: string
@@ -23,62 +31,54 @@ const accessCodes: AccessCode[] = [
 ]
 
 const AccessCodesPage = () => {
-    return <Box
-        position='absolute'
-        top='0'
-        left='0'
-        right='0'
-        p='8'>
+    return <Content >
+        <VStack align='stretch' spacing='8'>
 
-        <Box bg='white' p='8' rounded='xl' border='1px' borderColor='gray.200' >
-            <VStack align='stretch' spacing='8'>
+            <Heading size='md' fontWeight='600'>
+                Códigos de acceso
+            </Heading>
 
-                <Heading size='md' fontWeight='600'>
-                    Códigos de acceso
-                </Heading>
+            <HStack spacing='4' justify='space-between'>
+                <InputGroup color='gray.600' maxW='350px'>
+                    <InputLeftElement pointerEvents='none' children={<FiSearch />} />
+                    <Input type='text' placeholder='Buscar código o persona...' />
+                </InputGroup>
 
-                <HStack spacing='4' justify='space-between'>
-                    <InputGroup color='gray.600' maxW='350px'>
-                        <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                        <Input type='text' placeholder='Buscar código o persona...' />
-                    </InputGroup>
+                <GenerateAccessCodeModal trigger={
+                    <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+                        Generar nuevo
+                    </Button>
+                } />
+            </HStack>
 
-                    <GenerateAccessCodeModal trigger={
-                        <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
-                            Generar nuevo
-                        </Button>
-                    } />
-                </HStack>
+            <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+                <Table colorScheme='gray' fontSize='15' >
+                    <Thead>
+                        <Tr>
+                            <Th>Código</Th>
+                            <Th>Tipo de usuario</Th>
+                            <Th textAlign='center'>Estado</Th>
+                            <Th>Creado por</Th>
+                            <Th>Fecha de creación</Th>
+                            <Th textAlign='center'>Expira en</Th>
+                            <Th w='0' />
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {
+                            accessCodes.map(item => {
+                                return <TableItem key={item.code} {...item} />
+                            })
+                        }
+                    </Tbody>
 
-                <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
-                    <Table colorScheme='gray' fontSize='15' >
-                        <Thead>
-                            <Tr>
-                                <Th>Código</Th>
-                                <Th>Tipo de usuario</Th>
-                                <Th textAlign='center'>Estado</Th>
-                                <Th>Creado por</Th>
-                                <Th>Fecha de creación</Th>
-                                <Th textAlign='center'>Expira en</Th>
-                                <Th w='0' />
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {
-                                accessCodes.map(item => {
-                                    return <TableItem key={item.code} {...item} />
-                                })
-                            }
-                        </Tbody>
-
-                        <TableCaption textAlign='left'>
-                            Mostrando {accessCodes.length} resultados
-                        </TableCaption>
-                    </Table>
-                </TableContainer>
-            </VStack>
-        </Box>
-    </Box>
+                    <TableCaption textAlign='left'>
+                        Mostrando {accessCodes.length} resultados
+                    </TableCaption>
+                </Table>
+            </TableContainer>
+        </VStack>
+    </Content>
 }
 
 const TableItem = (item: AccessCode) => {
@@ -104,48 +104,20 @@ const TableItem = (item: AccessCode) => {
         <Td>{item.code}</Td>
         <Td>{item.role}</Td>
         <Td textAlign='center'>
-            <Badge
-                rounded='xl'
-                px='2'
-                py='2px'
-                fontWeight='600'
-                textTransform='lowercase'
-                colorScheme={
-                    item.status === 'Disponible'
-                        ? 'green'
-                        : item.status === 'Utilizado'
-                            ? 'blue'
-                            : 'red'
-                }>
+            <Badge colorScheme={statusColors[item.status]}>
                 {item.status}
             </Badge>
         </Td>
         <Td>{item.createdBy}</Td>
         <Td>{item.createdAt}</Td>
         <Td textAlign='center'>
-            {
-                item.expiresIn ? pluralize(item.expiresIn, 'día') : '-'
-            }
+            {item.expiresIn ? pluralize(item.expiresIn, 'día') : '-'}
         </Td>
 
         <Td>
             <HStack spacing='2'>
-                <Tooltip label='Eliminar código' openDelay={400} bg='white' p='4' rounded='lg' shadow='lg' >
-                    <IconButton
-                        variant='ghost'
-                        colorScheme='gray'
-                        aria-label='Eliminar código'
-                        icon={<FiTrash2 />} />
-                </Tooltip>
-
-                <Tooltip label='Copiar al portapapeles' openDelay={400} bg='white' p='4' rounded='lg' shadow='lg' >
-                    <IconButton
-                        variant='ghost'
-                        colorScheme='gray'
-                        aria-label='Copiar código'
-                        icon={<FiClipboard />}
-                        onClick={handleCopyToClipboard} />
-                </Tooltip>
+                <TableActionButton icon={<FiTrash2 />} tooltip='Eliminar código' />
+                <TableActionButton icon={<FiClipboard />} tooltip='Copiar al portapapeles' onClick={handleCopyToClipboard} />
             </HStack>
         </Td>
     </Tr>

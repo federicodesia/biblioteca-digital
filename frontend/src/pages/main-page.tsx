@@ -46,7 +46,15 @@ const MainPage = ({ children }: MainPageProps) => {
             <Navbar showSidebarButton={isDownMd} onOpen={onOpen} />
 
             <Box flex='1' position='relative' overflowY='auto'>
-                {children}
+                <Box
+                    position='absolute'
+                    top='0'
+                    left='0'
+                    right='0'
+                    p='8'>
+
+                    {children}
+                </Box>
             </Box>
         </Flex>
     </Flex>
