@@ -13,11 +13,12 @@ import {
     Text,
     useColorModeValue,
     Link,
+    Select
   } from '@chakra-ui/react';
   import { useState } from 'react';
  
   
-  export default function UploadRequestsPage() {
+  export default function MyDocuments() {
     const [showPassword, setShowPassword] = useState(false);
   
     return (
@@ -41,20 +42,12 @@ import {
             boxShadow={'lg'}
             p={8}>
             <Stack spacing={4}>
-              <HStack>
-                <Box>
+              
                   <FormControl id="autor" isRequired>
                     <FormLabel>Autor</FormLabel>
                     <Input type="text" />
                   </FormControl>
-                </Box>
-                <Box>
-                  <FormControl id="fecha" isRequired>
-                    <FormLabel>Fecha</FormLabel>
-                    <Input  type="date"/>
-                  </FormControl>
-                </Box>
-              </HStack>
+               
               <FormControl id="titulo" isRequired>
                 <FormLabel>Titulo</FormLabel>
                 <Input type="text" />
@@ -64,13 +57,13 @@ import {
                 <Input type="text" />
               </FormControl>
               <FormControl id="categoria" isRequired>
-                <FormLabel>
-                <select>
-                <option>Categoria</option>
-                <option>Naturales</option>
-                <option>Matematicas</option>
-                <option>Sociales</option> </select>
-                </FormLabel>
+                
+                <Select placeholder='Categoria'>
+                  <option value='option1'>Matematicas</option>
+                  <option value='option2'>Naturales</option>
+                  <option value='option3'>Historia</option>
+                </Select>
+
                 <InputGroup>
                  
                   <InputRightElement h={'full'}>
