@@ -64,9 +64,15 @@ import {
                 <Input type="text" />
               </FormControl>
               <FormControl id="categoria" isRequired>
-                <FormLabel>Categoria</FormLabel>
+                <FormLabel>
+                <select>
+                <option>Categoria</option>
+                <option>Naturales</option>
+                <option>Matematicas</option>
+                <option>Sociales</option> </select>
+                </FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? 'text' : 'password'} />
+                 
                   <InputRightElement h={'full'}>
                     <Button
                       variant={'ghost'}

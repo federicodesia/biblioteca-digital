@@ -19,6 +19,8 @@ function App() {
       <Route path="/my-documents" element={<MainPage />} />
       <Route path="/access-codes" element={<MainPage children={<AccessCodesPage />} />} />
       <Route path="/upload-requests" element={<MainPage children={<UploadRequestsPage/>} />} />
+      
+
     </Routes>
   )
 }
