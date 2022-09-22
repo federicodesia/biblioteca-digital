@@ -1,6 +1,6 @@
 import { Box, CloseButton, Flex, Heading, Stack, Text } from "@chakra-ui/react"
 import { ReactNode } from "react"
-import { FiBook, FiHome, FiKey, FiUpload } from "react-icons/fi"
+import { FiBook, FiHome, FiKey, FiUpload, FiUsers } from "react-icons/fi"
 import { useMatch, useResolvedPath } from "react-router-dom"
 import useColorScheme from "../hooks/use-color-scheme"
 import Link from "./link"
@@ -27,6 +27,7 @@ const navigationItems: NavigationItemsProps = [
     {
         title: 'Administrador',
         items: [
+            { to: '/users', text: 'Usuarios', icon: <FiUsers /> },
             { to: '/access-codes', text: 'Códigos de acceso', icon: <FiKey /> },
             { to: '/upload-requests', text: 'Solicitudes de carga', icon: <FiUpload /> }
         ]

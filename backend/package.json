@@ -1,0 +1,31 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "start": "node build/index.js",
+    "tsc": "tsc",
+    "reset": "prisma migrate reset",
+    "migrate": "prisma migrate dev --name init"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.14",
+    "@types/node": "^18.7.18",
+    "nodemon": "^2.0.20",
+    "prisma": "^4.3.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.3.1",
+    "express": "^4.18.1"
+  }
+}

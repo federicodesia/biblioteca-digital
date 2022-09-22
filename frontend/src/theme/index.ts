@@ -10,6 +10,17 @@ const theme = extendTheme(
         fonts: {
             heading: `Work Sans, system-ui, sans-serif`,
             body: `Inter, system-ui, sans-serif`,
+        },
+        components: {
+            Badge: {
+                baseStyle: {
+                    rounded: 'xl',
+                    px: '2',
+                    py: '2px',
+                    fontWeight: '600',
+                    textTransform: 'lowercase',
+                }
+            }
         }
     },
     withDefaultColorScheme({ colorScheme: primaryColorScheme })
