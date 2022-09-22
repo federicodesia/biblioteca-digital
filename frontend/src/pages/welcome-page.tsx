@@ -1,4 +1,4 @@
-import { Stack, Flex, Box, Heading, Text, Icon, IconProps, useMediaQuery } from '@chakra-ui/react';
+import { Stack, Flex, Box, Heading, Text, Icon, IconProps, useMediaQuery, Image, VStack } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import UnderlinedText from '../components/underlined_text';
 import useColorScheme from '../hooks/use-color-scheme';
@@ -12,7 +12,90 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
     const { secondaryScheme } = useColorScheme()
     const [upMd] = useMediaQuery(up('md'))
 
-    return <Flex
+    return <Stack minH='100vh' direction={{ base: 'column', md: 'row' }}>
+
+        <Flex
+            flex={1}
+            align='center'
+            justify='center'
+            bgGradient={{
+                base: 'linear(to-b, blue.300, transparent)',
+                md: 'linear(to-r, blue.400, transparent)'
+            }} >
+            <VStack
+                w='full'
+                maxW='xl'
+                spacing={{ base: 5, md: 10 }}
+
+                justify='space-between'
+                align='start'
+                h='full'
+                px='8'
+                py='12' >
+
+                <Image
+                    src='logo_cuch.png'
+                    h='100px'
+                    objectFit='contain'
+                    filter='drop-shadow(0 0 64px #fff)' />
+
+                <VStack spacing='8'>
+                    <Heading
+                        lineHeight={1.1}
+                        fontWeight={600}
+                        fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}
+                        bgGradient='linear(to-l, #203E8B, #00285A)'
+                        bgClip='text'>
+
+                        Biblioteca digital
+                        <br />
+                        <Text as='span' >
+                            Centro Universitario Chivilcoy
+                        </Text>
+                    </Heading>
+
+                    {
+                        upMd && <Text color='blackAlpha.900' fontWeight='500' fontSize='lg' >
+                            Espacio común entre alumnos y docentes de todas las extensiones universitarias,
+                            donde podrás encontrar y compartir material digitalizado
+                        </Text>
+                    }
+                </VStack>
+
+                <div />
+            </VStack>
+        </Flex>
+
+        <Flex flex={1} align='center' justify='center'>
+            <Flex p='8' w='full' maxW='lg' align='center' justify='center' position='relative' >
+
+                {
+                    upMd ? <>
+                        <Blob
+                            w='150%'
+                            h='100%'
+                            position='absolute'
+                            top={6}
+                            zIndex={-1}
+                            color='blue.100' />
+
+                        <Box
+                            position='relative'
+                            bg='white'
+                            rounded='2xl'
+                            p={10}
+                            boxShadow='2xl'
+                            w={{ base: 'sm', lg: 'md' }}>
+
+                            {form}
+                        </Box>
+                    </> : form
+                }
+            </Flex>
+        </Flex>
+    </Stack>
+
+    /*return <Flex
         minH='100vh'
         justify='center'
         align={{ base: 'start', md: 'center' }}>
@@ -80,7 +163,7 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
                     : form
             }
         </Stack>
-    </Flex>
+    </Flex>*/
 }
 
 const Blob = (props: IconProps) => {

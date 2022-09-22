@@ -10,11 +10,11 @@ interface WelcomeFormProps {
 
 const WelcomeForm = ({ title, description, content, bottom }: WelcomeFormProps) => {
     return <Stack
-        spacing={8}
+        spacing={12}
         minH='18rem'
         justify='space-between'>
         <Stack textAlign={{ md: 'center' }}>
-            <Heading fontSize={{ base: '2xl', md: '2xl' }}>
+            <Heading fontSize={{ base: '2xl', md: '3xl' }}>
                 {title}
             </Heading>
             <Text color='gray.600'>

@@ -13,6 +13,7 @@ const UnderlinedText = ({ children, color, opacity = '1' }: UnderlinedTextProps)
     return <Text
         as='span'
         position='relative'
+        zIndex='0'
         _after={{
             content: "''",
             width: 'full',
