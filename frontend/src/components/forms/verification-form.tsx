@@ -4,7 +4,7 @@ import WelcomeForm from './welcome-form';
 
 const VerificationForm = () => {
     return <WelcomeForm
-        title='Verificación de acceso'
+        title='Verificación'
         description='Por favor ingresa el código de acceso otorgado por un profesor o administrador'
         content={
             <FormControl>

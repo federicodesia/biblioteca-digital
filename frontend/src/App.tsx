@@ -4,15 +4,10 @@ import RegisterForm from "./components/forms/register-form"
 import VerificationForm from "./components/forms/verification-form"
 import AccessCodesPage from "./pages/access-codes-page"
 import MainPage from "./pages/main-page"
-
-
-
+import MyDocumentsPage from "./pages/my-documents-page"
 import UploadRequestsPage from "./pages/upload-requests-page"
 import UsersPage from "./pages/users-page"
-
 import WelcomePage from "./pages/welcome-page"
-import MyDocuments from "./pages/my-documents"
-
 
 function App() {
   return (
@@ -23,12 +18,10 @@ function App() {
       <Route path="/register" element={<WelcomePage form={<RegisterForm />} />} />
 
       <Route path="/home" element={<MainPage />} />
-      <Route path="/my-documents" element={<MainPage  children={<MyDocuments/>}/>} />
+      <Route path="/my-documents" element={<MainPage children={<MyDocumentsPage />} />} />
       <Route path="/users" element={<MainPage children={<UsersPage />} />} />
       <Route path="/access-codes" element={<MainPage children={<AccessCodesPage />} />} />
-      <Route path="/upload-requests" element={<MainPage children={<UploadRequestsPage/>} />} />
-      
-
+      <Route path="/upload-requests" element={<MainPage children={<UploadRequestsPage />} />} />
     </Routes>
   )
 }

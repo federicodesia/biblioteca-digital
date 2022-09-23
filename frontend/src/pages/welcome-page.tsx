@@ -1,5 +1,6 @@
-import { Stack, Flex, Box, Heading, Text, Icon, IconProps, useMediaQuery, Image, VStack } from '@chakra-ui/react';
+import { Stack, Flex, Box, Heading, Text, useMediaQuery, Image, VStack, HStack } from '@chakra-ui/react';
 import { ReactNode } from 'react';
+import Link from '../components/link';
 import UnderlinedText from '../components/underlined_text';
 import useColorScheme from '../hooks/use-color-scheme';
 import { up } from '../theme/breakpoints';
@@ -12,176 +13,71 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
     const { secondaryScheme } = useColorScheme()
     const [upMd] = useMediaQuery(up('md'))
 
-    return <Stack minH='100vh' direction={{ base: 'column', md: 'row' }}>
+    return <Box position='relative' minH='100vh'>
+        <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(60deg, transparent, blue.200, purple.100, transparent)' opacity={{ base: '0.5', md: '0.75' }} />
+        <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(to-t, white, transparent)' />
 
-        <Flex
-            flex={1}
-            align='center'
-            justify='center'
-            bgGradient={{
-                base: 'linear(to-b, blue.300, transparent)',
-                md: 'linear(to-r, blue.400, transparent)'
-            }} >
-            <VStack
-                w='full'
-                maxW='xl'
-                spacing={{ base: 5, md: 10 }}
+        <VStack position='absolute' top='0' left='0' bottom='0' right='0'>
 
-                justify='space-between'
-                align='start'
-                h='full'
-                px='8'
-                py='12' >
+            <HStack w='full' p='8' maxW='7xl' justify={{ md: 'space-between' }} >
+                <Link to='/login'>
+                    <Image src='logo_cuch.png' objectFit='contain' h={{ base: '72px', sm: '86px' }} />
+                </Link>
 
-                <Image
-                    src='logo_cuch.png'
-                    h='100px'
-                    objectFit='contain'
-                    filter='drop-shadow(0 0 64px #fff)' />
+                <HStack as='nav' spacing='4' display={{ base: 'none', md: 'flex' }}>
+                    <NavLink name='Iniciar sesión' to='/login' />
+                    <NavLink name='Registrarme' to='/register' />
+                </HStack>
+            </HStack>
 
-                <VStack spacing='8'>
+            <Stack flex='1' w='full' p='8' maxW='7xl' spacing='12' align={{ md: 'center' }} direction={{ base: 'column', md: 'row' }}>
+
+                <VStack flex='1' spacing='12' align='flex-start' >
                     <Heading
                         lineHeight={1.1}
                         fontWeight={600}
                         fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}
-                        bgGradient='linear(to-l, #203E8B, #00285A)'
-                        bgClip='text'>
+                        color={secondaryScheme[700]}>
 
-                        Biblioteca digital
+                        <UnderlinedText color='#0987a0' opacity='0.3'>
+                            Biblioteca digital
+                        </UnderlinedText>
                         <br />
-                        <Text as='span' >
+                        <Text as='span' color='gray.700'>
                             Centro Universitario Chivilcoy
                         </Text>
                     </Heading>
 
                     {
-                        upMd && <Text color='blackAlpha.900' fontWeight='500' fontSize='lg' >
+                        upMd && <Text color='gray.600' fontSize='lg'>
                             Espacio común entre alumnos y docentes de todas las extensiones universitarias,
                             donde podrás encontrar y compartir material digitalizado
                         </Text>
                     }
                 </VStack>
 
-                <div />
-            </VStack>
-        </Flex>
-
-        <Flex flex={1} align='center' justify='center'>
-            <Flex p='8' w='full' maxW='lg' align='center' justify='center' position='relative' >
-
-                {
-                    upMd ? <>
-                        <Blob
-                            w='150%'
-                            h='100%'
-                            position='absolute'
-                            top={6}
-                            zIndex={-1}
-                            color='blue.100' />
-
-                        <Box
-                            position='relative'
-                            bg='white'
-                            rounded='2xl'
-                            p={10}
-                            boxShadow='2xl'
-                            w={{ base: 'sm', lg: 'md' }}>
-
-                            {form}
-                        </Box>
-                    </> : form
-                }
-            </Flex>
-        </Flex>
-    </Stack>
-
-    /*return <Flex
-        minH='100vh'
-        justify='center'
-        align={{ base: 'start', md: 'center' }}>
-
-        <Stack
-            w='full'
-            direction={{ base: 'column', md: 'row' }}
-            align={{ md: 'center' }}
-            maxW='7xl'
-            p={8}
-            spacing={12}>
-
-            <Stack
-                flex={1}
-                spacing={{ base: 5, md: 10 }}>
-
-                <Heading
-                    lineHeight={1.1}
-                    fontWeight={600}
-                    fontSize={{ base: '3xl', sm: '4xl', lg: '6xl' }}>
-                    <UnderlinedText color={secondaryScheme[700]}>
-                        Biblioteca digital
-                    </UnderlinedText>
-                    <br />
-                    <Text as='span' color={secondaryScheme[700]}>
-                        Centro Universitario Chivilcoy
-                    </Text>
-                </Heading>
-
-                {
-                    upMd && <Text color='gray.500'>
-                        Espacio común entre alumnos y docentes de todas las extensiones universitarias,
-                        donde podrás encontrar y compartir material digitalizado
-                    </Text>
-                }
+                <Box flex='1'>
+                    {
+                        upMd
+                            ? <Flex flex={1} justify='flex-end' align='center'>
+                                <Box bg='white' rounded='2xl' p='10' boxShadow='2xl' w={{ base: 'sm', lg: 'md' }}>
+                                    {form}
+                                </Box>
+                            </Flex>
+                            : form
+                    }
+                </Box>
             </Stack>
 
-            {
-                upMd
-                    ? <Flex
-                        flex={1}
-                        justify='center'
-                        align='center'
-                        position='relative'>
-
-                        <Blob
-                            w='150%'
-                            h='100%'
-                            position='absolute'
-                            top={6}
-                            zIndex={-1}
-                            color={secondaryScheme[50]} />
-
-                        <Box
-                            position='relative'
-                            bg='white'
-                            rounded='2xl'
-                            p={10}
-                            boxShadow='2xl'
-                            w={{ base: 'sm', lg: 'md' }}>
-
-                            {form}
-                        </Box>
-                    </Flex>
-                    : form
-            }
-        </Stack>
-    </Flex>*/
+            <Box h='86px' />
+        </VStack>
+    </Box>
 }
 
-const Blob = (props: IconProps) => {
-    return (
-        <Icon
-            width='100%'
-            viewBox="0 0 578 440"
-            fill='none'
-            xmlns='http://www.w3.org/2000/svg'
-            {...props}>
-            <path
-                fillRule='evenodd'
-                clipRule='evenodd'
-                d='M239.184 439.443c-55.13-5.419-110.241-21.365-151.074-58.767C42.307 338.722-7.478 282.729.938 221.217c8.433-61.644 78.896-91.048 126.871-130.712 34.337-28.388 70.198-51.348 112.004-66.78C282.34 8.024 325.382-3.369 370.518.904c54.019 5.115 112.774 10.886 150.881 49.482 39.916 40.427 49.421 100.753 53.385 157.402 4.13 59.015 11.255 128.44-30.444 170.44-41.383 41.683-111.6 19.106-169.213 30.663-46.68 9.364-88.56 35.21-135.943 30.551z'
-                fill='currentColor'
-            />
-        </Icon>
-    );
-};
+const NavLink = ({ name, to }: { name: string, to: string }) => {
+    return <Link px='4' py='2' rounded='lg' _hover={{ bg: 'blackAlpha.100' }} fontWeight='600' to={to}>
+        {name}
+    </Link>
+}
 
 export default WelcomePage
