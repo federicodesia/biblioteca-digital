@@ -1,8 +1,13 @@
 import { IconButton, Input, InputGroup, InputProps, InputRightElement } from "@chakra-ui/react"
 import { useState } from "react"
+import { UseFormRegisterReturn } from "react-hook-form"
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5"
 
-const PasswordInput = (props: InputProps) => {
+interface Props extends InputProps {
+    register?: UseFormRegisterReturn
+}
+
+const PasswordInput = ({ register, ...props }: Props) => {
     const [show, setShow] = useState(false)
     const handleClick = () => setShow(!show)
 
@@ -11,6 +16,7 @@ const PasswordInput = (props: InputProps) => {
             <Input
                 pr={16}
                 type={show ? 'text' : 'password'}
+                {...register}
                 {...props}
             />
             <InputRightElement h='full'>

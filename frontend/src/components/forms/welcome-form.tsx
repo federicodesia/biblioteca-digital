@@ -14,7 +14,7 @@ const WelcomeForm = ({ title, description, content, bottom }: WelcomeFormProps) 
         minH='20rem'
         justify='space-between'>
         <Stack textAlign={{ md: 'center' }}>
-            <Heading fontSize={{ base: '2xl', lg: '3xl' }}>
+            <Heading fontSize='2xl'>
                 {title}
             </Heading>
             <Text color='gray.600'>

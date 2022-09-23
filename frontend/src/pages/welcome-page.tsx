@@ -14,7 +14,7 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
     const [upMd] = useMediaQuery(up('md'))
 
     return <Box position='relative' minH='100vh'>
-        <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(60deg, transparent, blue.200, purple.100, transparent)' opacity={{ base: '0.5', md: '0.75' }} />
+        <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(60deg, white 0%, blue.200 30%, purple.100 80%, whiteAlpha.500 100%)' opacity={{ base: '0.5', md: '0.65' }} />
         <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(to-t, white, transparent)' />
 
         <VStack position='absolute' top='0' left='0' bottom='0' right='0'>
@@ -26,7 +26,7 @@ const WelcomePage = ({ form }: WelcomePageProps) => {
 
                 <HStack as='nav' spacing='4' display={{ base: 'none', md: 'flex' }}>
                     <NavLink name='Iniciar sesión' to='/login' />
-                    <NavLink name='Registrarme' to='/register' />
+                    <NavLink name='Registrarme' to='/verification' />
                 </HStack>
             </HStack>
 

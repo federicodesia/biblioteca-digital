@@ -1,27 +1,33 @@
-import { Text, FormControl, Button, HStack, PinInputField, PinInput } from '@chakra-ui/react';
+import { Text, FormControl, Button, Input, FormErrorMessage } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from '../link';
 import WelcomeForm from './welcome-form';
+import { verificationSchema } from '../../schemas/auth.schema';
+
+type FormValues = {
+    code: string
+}
 
 const VerificationForm = () => {
+    const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(verificationSchema) })
+    const onSubmit = handleSubmit((data) => console.log(data))
+
     return <WelcomeForm
         title='Verificación'
         description='Por favor ingresa el código de acceso otorgado por un profesor o administrador'
         content={
-            <FormControl>
-                <HStack justify='center' spacing={4} >
-                    <PinInput type='alphanumeric'>
-                        <PinInputField />
-                        <PinInputField />
-                        <PinInputField />
-                        <PinInputField />
-                        <PinInputField />
-                    </PinInput>
-                </HStack>
+            <FormControl isInvalid={errors.code !== undefined}>
+                <Input placeholder='Código de acceso' {...register('code')} />
+
+                <FormErrorMessage>
+                    {errors.code?.message}
+                </FormErrorMessage>
             </FormControl>
         }
         bottom={
             <>
-                <Button colorScheme='blue'>
+                <Button colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
                     Continuar
                 </Button>
 
