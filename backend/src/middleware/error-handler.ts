@@ -7,16 +7,14 @@ const errorHandler = (
     res: Response,
     next: NextFunction,
 ) => {
-    if (err instanceof CustomException) {
-        res
+    if (err instanceof CustomException)
+        return res
             .status(err?.code ?? 500)
             .json({ error: err.customMessage ?? "Internal Server Error" })
-    }
-    else {
-        res
-            .status(500)
-            .json({ error: "Internal Server Error" })
-    }
+
+    return res
+        .status(500)
+        .json({ error: "Internal Server Error" })
 }
 
 export default errorHandler;

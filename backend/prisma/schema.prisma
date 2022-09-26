@@ -8,21 +8,44 @@ datasource db {
 }
 
 model Role {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(32)
-  User User[]
+  id         Int          @id @default(autoincrement())
+  name       String       @unique @db.VarChar(32)
+  User       User[]
+  AccessCode AccessCode[]
 }
 
 model User {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(64)
+  lastname    String        @db.VarChar(64)
+  email       String        @unique @db.VarChar(128)
+  password    String        @db.VarChar(128)
+  role        Role          @relation(fields: [roleId], references: [id])
+  roleId      Int
+  isActive    Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  invitedBy   Int?
+  AccessCode  AccessCode[]
+  UserSession UserSession[]
+}
+
+model AccessCode {
+  code        String   @id @db.VarChar(6)
+  role        Role     @relation(fields: [roleId], references: [id])
+  roleId      Int
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById Int
+  createdAt   DateTime @default(now())
+  timesUsed   Int      @default(0)
+  expiresAt   DateTime
+}
+
+model UserSession {
   id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(64)
-  lastname  String   @db.VarChar(64)
-  email     String   @unique @db.VarChar(128)
-  password  String   @db.VarChar(128)
-  role      Role     @relation(fields: [roleId], references: [id])
-  roleId    Int
-  isActive  Boolean  @default(true)
+  token     String   @db.LongText
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  invitedBy Int?
 }

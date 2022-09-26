@@ -5,15 +5,31 @@ import Link from '../link';
 import PasswordInput from '../password-input';
 import WelcomeForm from './welcome-form';
 import { loginSchema } from '../../schemas/auth.schema';
+import useAuthStore from '../../zustand/stores/auth-store';
+import { ErrorResponse } from '../../services/auth-service/dto';
+import axios from 'axios';
 
 type FormValues = {
     email: string
     password: string
 }
 
-const LoginForm = () => {
-    const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
-    const onSubmit = handleSubmit((data) => console.log(data))
+function LoginForm() {
+    const login = useAuthStore((state) => state.login)
+
+    const { handleSubmit, register, formState: { errors, isSubmitting }, setError } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
+
+    const onSubmit = handleSubmit(async (data) => {
+        try {
+            return await login(data.email, data.password)
+        }
+        catch (e) {
+            if (axios.isAxiosError(e)) {
+                const { error } = e.response?.data as ErrorResponse
+                error.forEach(i => setError(i.path, { type: 'custom', message: i.message }))
+            }
+        }
+    })
 
     return <WelcomeForm
         title='¡Bienvenido!'
