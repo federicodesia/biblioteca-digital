@@ -4,9 +4,9 @@ import excludeKey from "../../utils/exclude-key";
 
 import jwt from "jsonwebtoken";
 import envVars from "../../utils/env-vars";
-import { CustomException } from "../../utils/custom-exception";
 import HTTPStatusCode from "../../utils/http-status-code";
 import { RoleType } from "../../types";
+import { FormException } from "../../utils/form-exception";
 
 export type JWTPayload = {
     user: Prisma.UserGetPayload<{ include: { role: true } }>
@@ -71,18 +71,18 @@ const validateAccessCode = async (code: string) => {
         include: { role: true }
     })
 
-    if (!accessCode) throw new CustomException(
+    if (!accessCode) throw new FormException(
         HTTPStatusCode.NOT_FOUND,
         [{ path: 'code', message: 'El código de acceso no es válido' }]
     )
 
-    if (accessCode.expiresAt < new Date()) throw new CustomException(
+    if (accessCode.expiresAt < new Date()) throw new FormException(
         HTTPStatusCode.CONFLICT,
         [{ path: 'code', message: 'El código de acceso está expirado' }]
     )
 
     const accessCodeRole = accessCode.role.name as RoleType
-    if (accessCodeRole !== 'Alumno' && accessCode.timesUsed > 0) throw new CustomException(
+    if (accessCodeRole !== 'Alumno' && accessCode.timesUsed > 0) throw new FormException(
         HTTPStatusCode.CONFLICT,
         [{ path: 'code', message: 'El código de acceso ya fue utilizado' }]
     )

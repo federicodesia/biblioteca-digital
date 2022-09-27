@@ -3,6 +3,8 @@ import { ReactNode } from "react"
 import { FiBook, FiHome, FiKey, FiUpload, FiUsers } from "react-icons/fi"
 import { useMatch, useResolvedPath } from "react-router-dom"
 import useColorScheme from "../hooks/use-color-scheme"
+import { RoleType } from "../interfaces"
+import useAuthStore from "../zustand/stores/auth-store"
 import Link from "./link"
 
 interface NavigationItemProps {
@@ -13,6 +15,7 @@ interface NavigationItemProps {
 
 type NavigationItemsProps = {
     title?: string
+    requiredRole?: RoleType,
     items: NavigationItemProps[]
 }[]
 
@@ -25,7 +28,15 @@ const navigationItems: NavigationItemsProps = [
         ]
     },
     {
+        title: 'Profesor',
+        requiredRole: 'Profesor',
+        items: [
+            { to: '/access-codes', text: 'Códigos de acceso', icon: <FiKey /> }
+        ]
+    },
+    {
         title: 'Administrador',
+        requiredRole: 'Administrador',
         items: [
             { to: '/users', text: 'Usuarios', icon: <FiUsers /> },
             { to: '/access-codes', text: 'Códigos de acceso', icon: <FiKey /> },
@@ -39,6 +50,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ onClose }: SidebarProps) => {
+    const user = useAuthStore((state) => state.user)
     const { secondaryScheme } = useColorScheme()
 
     return <Box
@@ -51,11 +63,12 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         <Flex h='20' alignItems='center' mx='6' justifyContent='space-between'>
             <Heading
                 fontWeight={600}
-                fontSize='lg'>
+                fontSize='lg'
+                color={secondaryScheme[700]}>
 
                 Biblioteca digital
                 <br />
-                <Text as='span' color={secondaryScheme[700]} fontSize='sm'>
+                <Text as='span' color='gray.800' fontSize='sm'>
                     Centro Universitario Chivilcoy
                 </Text>
             </Heading>
@@ -65,30 +78,32 @@ const Sidebar = ({ onClose }: SidebarProps) => {
 
         <Stack p='4' spacing='6'>
             {
-                navigationItems.map((navigation, index) => {
-                    return <Stack key={`${navigation.title} ${index}`} spacing='4'>
+                navigationItems
+                    .filter(i => i.requiredRole === undefined ? true : i.requiredRole === user?.role.name)
+                    .map((navigation, index) => {
+                        return <Stack key={`${navigation.title} ${index}`} spacing='4'>
 
-                        {
-                            navigation.title && <Text
-                                ml='12px'
-                                textTransform='uppercase'
-                                fontWeight='700'
-                                fontSize='sm'
-                                letterSpacing='1'>
-
-                                {navigation.title}
-                            </Text>
-                        }
-
-                        <Stack spacing={1}>
                             {
-                                navigation.items.map((item, index) => (
-                                    <NavigationItem key={`${item.text} ${index}`} {...item} />
-                                ))
+                                navigation.title && <Text
+                                    ml='12px'
+                                    textTransform='uppercase'
+                                    fontWeight='700'
+                                    fontSize='sm'
+                                    letterSpacing='1'>
+
+                                    {navigation.title}
+                                </Text>
                             }
+
+                            <Stack spacing={1}>
+                                {
+                                    navigation.items.map((item, index) => (
+                                        <NavigationItem key={`${item.text} ${index}`} {...item} />
+                                    ))
+                                }
+                            </Stack>
                         </Stack>
-                    </Stack>
-                })
+                    })
             }
         </Stack>
     </Box>

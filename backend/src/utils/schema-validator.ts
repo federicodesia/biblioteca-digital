@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import { AnyZodObject, z, ZodError } from 'zod';
 import { CustomException } from './custom-exception';
+import { FormException } from './form-exception';
 import HTTPStatusCode from './http-status-code';
 
 export async function schemaValidator<T extends AnyZodObject>(
@@ -11,10 +12,10 @@ export async function schemaValidator<T extends AnyZodObject>(
         return await schema.parseAsync(req)
     } catch (error) {
         if (error instanceof ZodError) {
-            throw new CustomException(
+            throw new FormException(
                 HTTPStatusCode.BAD_REQUEST,
                 error.errors.map(e => ({
-                    path: e.path.at(-1),
+                    path: e.path.at(-1)?.toString() ?? '',
                     message: e.message
                 }))
             )

@@ -12,7 +12,7 @@ export const loginSchema = z.object({
 })
 
 export const verifyAccessCodeSchema = z.object({
-    body: z.object({
+    params: z.object({
         code: z.string({ required_error: "Ingresa el código de acceso" })
             .length(5, { message: "Debe contener 5 caracteres" }),
     }),

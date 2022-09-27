@@ -5,6 +5,9 @@ import Link from '../link';
 import PasswordInput from '../password-input';
 import WelcomeForm from './welcome-form';
 import { registerSchema } from '../../schemas/auth.schema';
+import { useNavigate, useParams } from 'react-router-dom';
+import setFormError from '../../utils/form-error';
+import useAuthStore from '../../zustand/stores/auth-store';
 
 type FormValues = {
     name: string
@@ -14,15 +17,36 @@ type FormValues = {
 }
 
 const RegisterForm = () => {
-    const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(registerSchema) })
-    const onSubmit = handleSubmit((data) => console.log(data))
+    const { code } = useParams();
+
+    const {
+        handleSubmit,
+        register,
+        formState: { errors, isSubmitting },
+        setError
+    } = useForm<FormValues>({ resolver: zodResolver(registerSchema) })
+
+    const navigate = useNavigate()
+    const registerUser = useAuthStore((state) => state.register)
+
+    const onSubmit = handleSubmit(async (data) => {
+        if (!code) return navigate('/verification')
+
+        const { name, lastname, email, password } = data
+        const response = await registerUser(code, name, lastname, email, password)
+        if (response.errorType === undefined) return navigate('/home')
+        if (response.errorType !== 'form') return
+
+        if (response.error.some(e => e.path === 'code')) return navigate('/verification')
+        return setFormError(response.error, setError)
+    })
 
     return <WelcomeForm
         title='Crear una cuenta'
         description='Por favor, completa tus datos'
         content={
             <>
-                <HStack spacing={4}>
+                <HStack spacing={4} align='start'>
                     <FormControl isInvalid={errors.name !== undefined}>
                         <FormLabel>Nombre</FormLabel>
                         <Input type='text' {...register('name')} />

@@ -2,15 +2,16 @@ import { Router } from "express";
 import { CustomException } from "../../utils/custom-exception";
 import HTTPStatusCode from "../../utils/http-status-code";
 import { schemaValidator } from "../../utils/schema-validator";
-import { loginSchema, registerSchema, verifyAccessCodeSchema } from "./auth.schema";
-import authUtils, { JWTPayload } from "./auth.utils";
+import { loginSchema, registerSchema, verifyAccessCodeSchema } from "./auth.schemas";
+import authUtils from "./auth.utils";
 
 import { prismaClient } from "../..";
 import extractJwt from "../../utils/extract-jwt";
 
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import envVars from "../../utils/env-vars";
+import { authGuardRefreshToken } from "../../middleware/auth-guard";
+import extractUser from "../../utils/extract-user";
+import { FormException } from "../../utils/form-exception";
 
 const router = Router()
 
@@ -20,24 +21,24 @@ router.post('/login', async (req, res) => {
 
     const user = await authUtils.getUser(email, { role: true })
 
-    if (!user) throw new CustomException(
+    if (!user) throw new FormException(
         HTTPStatusCode.NOT_FOUND,
         [{ path: 'email', message: 'El correo electrónico no está registrado' }]
     )
 
     const matches = await bcrypt.compare(password, user.password)
-    if (!matches) throw new CustomException(
+    if (!matches) throw new FormException(
         HTTPStatusCode.FORBIDDEN,
-        [{ path: 'email', message: 'Contraseña incorrecta' }]
+        [{ path: 'password', message: 'Contraseña incorrecta' }]
     )
 
     const session = await authUtils.generateSession(user)
     return res.json(session)
 })
 
-router.get('/verify-access-code', async (req, res) => {
-    const { body } = await schemaValidator(verifyAccessCodeSchema, req);
-    const accessCode = await authUtils.validateAccessCode(body.code)
+router.get('/verify-access-code/:code', async (req, res) => {
+    const { params } = await schemaValidator(verifyAccessCodeSchema, req);
+    const accessCode = await authUtils.validateAccessCode(params.code)
     return res.json(accessCode)
 })
 
@@ -48,7 +49,7 @@ router.post('/register', async (req, res) => {
     const accessCode = await authUtils.validateAccessCode(code)
 
     const checkEmail = await authUtils.getUser(email)
-    if (checkEmail) throw new CustomException(
+    if (checkEmail) throw new FormException(
         HTTPStatusCode.CONFLICT,
         [{ path: 'email', message: 'El correo electrónico ya está en uso' }]
     )
@@ -76,27 +77,37 @@ router.post('/register', async (req, res) => {
     return res.json(session)
 })
 
-router.post('/access-token', async (req, res) => {
+router.post('/access-token', authGuardRefreshToken, async (req, res) => {
+    const { user } = extractUser(req)
+
+    const updatedUser = await authUtils.getUser(user.id, { role: true })
+    if (!updatedUser) throw new CustomException(
+        HTTPStatusCode.NOT_FOUND,
+        'Usuario no encontrado'
+    )
+
+    const accessToken = await authUtils.generateAccessToken(updatedUser)
+    return res.json({
+        accessToken: accessToken
+    })
+})
+
+router.post('/logout', authGuardRefreshToken, async (req, res) => {
     const token = extractJwt(req)
 
-    jwt.verify(token, envVars.jwtRefreshSecret, async (error, decoded) => {
-
-        if (error) throw new CustomException(
-            HTTPStatusCode.UNAUTHORIZED,
-            'El token no es válido'
-        )
-
-        const payload = decoded as JWTPayload
-        const user = await authUtils.getUser(payload.user.id, { role: true })
-
-        if (!user) throw new CustomException(
-            HTTPStatusCode.NOT_FOUND,
-            'Usuario no encontrado'
-        )
-
-        const accessToken = await authUtils.generateAccessToken(user)
-        return res.json(accessToken)
+    const userSession = await prismaClient.userSession.findFirst({
+        where: { token: token }
     })
+    if (!userSession) throw new CustomException(
+        HTTPStatusCode.NOT_FOUND,
+        'No se encontró la sesión de usuario'
+    )
+
+    const deleteUserSession = await prismaClient.userSession.delete({
+        where: { id: userSession.id }
+    })
+
+    return res.json(deleteUserSession)
 })
 
 export default router

@@ -4,14 +4,31 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from '../link';
 import WelcomeForm from './welcome-form';
 import { verificationSchema } from '../../schemas/auth.schema';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '../../zustand/stores/auth-store';
+import setFormError from '../../utils/form-error';
 
 type FormValues = {
     code: string
 }
 
 const VerificationForm = () => {
-    const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<FormValues>({ resolver: zodResolver(verificationSchema) })
-    const onSubmit = handleSubmit((data) => console.log(data))
+    const {
+        handleSubmit,
+        register,
+        formState: { errors, isSubmitting },
+        setError
+    } = useForm<FormValues>({ resolver: zodResolver(verificationSchema) })
+
+    const navigate = useNavigate()
+    const verifyAccessCode = useAuthStore((state) => state.verifyAccessCode)
+
+    const onSubmit = handleSubmit(async (data) => {
+        const { code } = data
+        const response = await verifyAccessCode(code)
+        if (response.errorType === undefined) return navigate(`/register/${code}`)
+        if (response.errorType === 'form') return setFormError(response.error, setError)
+    })
 
     return <WelcomeForm
         title='Verificación'

@@ -1,5 +1,6 @@
 import { IconButton, Avatar, Flex, HStack, VStack, Text, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { FiMenu, FiLogOut } from 'react-icons/fi';
+import useAuthStore from '../zustand/stores/auth-store';
 
 interface NavbarProps {
     showSidebarButton: boolean
@@ -31,6 +32,9 @@ const Navbar = ({ showSidebarButton, onOpen }: NavbarProps) => {
 }
 
 const UserMenu = () => {
+    const user = useAuthStore((state) => state.user)
+    const logout = useAuthStore((state) => state.logout)
+
     return <Menu>
         <MenuButton py='2' fontSize='sm'>
             <HStack spacing='3'>
@@ -41,14 +45,16 @@ const UserMenu = () => {
                     alignItems='flex-start'
                     spacing='0'>
 
-                    <Text fontWeight='500'>Nombre usuario</Text>
-                    <Text color='gray.500'>Administrador</Text>
+                    <Text fontWeight='500'> {`${user?.name} ${user?.lastname}`} </Text>
+                    <Text color='gray.500'> {user?.role.name} </Text>
                 </VStack>
             </HStack>
         </MenuButton>
 
         <MenuList fontSize='sm'>
-            <MenuItem icon={<FiLogOut />}>Cerrar sesión</MenuItem>
+            <MenuItem icon={<FiLogOut />} onClick={logout}>
+                Cerrar sesión
+            </MenuItem>
         </MenuList>
     </Menu>
 }

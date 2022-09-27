@@ -6,8 +6,8 @@ import PasswordInput from '../password-input';
 import WelcomeForm from './welcome-form';
 import { loginSchema } from '../../schemas/auth.schema';
 import useAuthStore from '../../zustand/stores/auth-store';
-import { ErrorResponse } from '../../services/auth-service/dto';
-import axios from 'axios';
+import setFormError from '../../utils/form-error';
+import { useNavigate } from 'react-router-dom';
 
 type FormValues = {
     email: string
@@ -15,20 +15,21 @@ type FormValues = {
 }
 
 function LoginForm() {
+    const {
+        handleSubmit,
+        register,
+        formState: { errors, isSubmitting },
+        setError
+    } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
+
+    const navigate = useNavigate()
     const login = useAuthStore((state) => state.login)
 
-    const { handleSubmit, register, formState: { errors, isSubmitting }, setError } = useForm<FormValues>({ resolver: zodResolver(loginSchema) })
-
     const onSubmit = handleSubmit(async (data) => {
-        try {
-            return await login(data.email, data.password)
-        }
-        catch (e) {
-            if (axios.isAxiosError(e)) {
-                const { error } = e.response?.data as ErrorResponse
-                error.forEach(i => setError(i.path, { type: 'custom', message: i.message }))
-            }
-        }
+        const { email, password } = data
+        const response = await login(email, password)
+        if (response.errorType === undefined) return navigate('/home')
+        if (response.errorType === 'form') return setFormError(response.error, setError)
     })
 
     return <WelcomeForm
