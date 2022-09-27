@@ -5,7 +5,7 @@ export interface FormError {
     message: string
 }
 
-export type ResponseType<T> = {
+export type FormResponseType<T> = {
     errorType: 'form',
     error: FormError[]
 } | {
@@ -16,14 +16,26 @@ export type ResponseType<T> = {
     data: T
 }
 
-export type LoginResponse = ResponseType<{
+export type LoginResponse = FormResponseType<{
     accessToken: string
     refreshToken: string
 }>
 
-export type VerifyAccessCodeResponse = ResponseType<AccessCode>
+export type VerifyAccessCodeResponse = FormResponseType<AccessCode>
 
-export type RegisterResponse = ResponseType<{
+export type RegisterResponse = FormResponseType<{
     accessToken: string
     refreshToken: string
+}>
+
+export type ResponseType<T> = {
+    errorType: 'string'
+    error: string
+} | {
+    errorType: undefined,
+    data: T
+}
+
+export type AccessTokenResponse = ResponseType<{
+    accessToken: string
 }>

@@ -33,8 +33,8 @@ const useAuthStore = create<AuthState>()(
                     if (response.errorType === undefined) set({ userSession: response.data })
                     return response
                 },
-                logout: () => {
-                    logoutRequest()
+                logout: async () => {
+                    await logoutRequest()
                     set({ userSession: undefined })
                 }
             })
@@ -43,7 +43,6 @@ const useAuthStore = create<AuthState>()(
             name: 'auth-storage'
         }
     )
-
 )
 
 const unsubUserSession = useAuthStore.subscribe(

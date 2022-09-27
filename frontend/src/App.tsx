@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { Navigate, Route, Routes } from "react-router-dom"
 import LoginForm from "./components/forms/login-form"
 import RegisterForm from "./components/forms/register-form"
@@ -9,8 +10,15 @@ import MyDocumentsPage from "./pages/my-documents-page"
 import UploadRequestsPage from "./pages/upload-requests-page"
 import UsersPage from "./pages/users-page"
 import WelcomePage from "./pages/welcome-page"
+import { accessTokenRequest } from "./services/auth-service"
+import useAuthStore from "./zustand/stores/auth-store"
 
 function App() {
+
+  useEffect(() => {
+    if (useAuthStore.getState().userSession) accessTokenRequest()
+  }, [])
+
   return (
     <Routes>
       <Route element={<ProtectedRoute requiresAuth={false} navegateTo='/home' />}>

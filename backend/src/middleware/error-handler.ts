@@ -8,9 +8,6 @@ const errorHandler = (
     res: Response,
     next: NextFunction,
 ) => {
-    console.log(err instanceof CustomException)
-    console.log(err instanceof FormException)
-
     if (err instanceof CustomException) return res
         .status(err?.code ?? 500)
         .json({
