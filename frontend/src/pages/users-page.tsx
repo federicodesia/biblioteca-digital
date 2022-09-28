@@ -1,34 +1,22 @@
-import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
+import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
 import Content from "../components/content"
 import TableActionButton from "../components/table-action-button"
-
-type Status = 'Activo' | 'Inhabilitado'
-const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
-    'Activo': 'green',
-    'Inhabilitado': 'red',
-}
-
-interface UserData {
-    name: string
-    lastname: string
-    role: string
-    status: Status
-    email: string
-    signUpAt: string
-    invitedBy?: string
-}
-
-const usersData: UserData[] = [
-    { name: 'Federico', lastname: 'De Sía', status: 'Activo', role: 'Administrador', email: 'desiafederico@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.' },
-    { name: 'Milagros', lastname: 'Ratto', status: 'Activo', role: 'Administrador', email: 'milagrosratto@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.' },
-    { name: 'Marcelo', lastname: 'De Lillo', status: 'Activo', role: 'Profesor', email: 'marcelodelillo@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.', invitedBy: 'Federico De Sía' },
-    { name: 'Emmanuel', lastname: 'Pagano', status: 'Activo', role: 'Profesor', email: 'emmanuelpagano@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.', invitedBy: 'Milagros Ratto' },
-    { name: 'Matías', lastname: 'Schettino', status: 'Activo', role: 'Profesor', email: 'matiasschettino@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.', invitedBy: 'Marcelo De Lillo' },
-    { name: 'Persona', lastname: 'Infiltrada', status: 'Inhabilitado', role: 'Alumno', email: 'personainfiltrada@gmail.com', signUpAt: '12 sep. 2022 15:46 p.m.', invitedBy: 'Marcelo De Lillo' },
-]
+import { User } from "../interfaces"
+import pluralize from "../utils/pluralize"
+import useAdminStore from "../zustand/stores/admin-store"
+import useAuthStore from "../zustand/stores/auth-store"
 
 const UsersPage = () => {
+
+    const users = useAdminStore((state) => state.users)
+    const getUsers = useAdminStore((state) => state.getUsers)
+
+    useEffect(() => {
+        getUsers()
+    }, [])
+
     return <Content>
         <VStack align='stretch' spacing='8'>
 
@@ -56,14 +44,14 @@ const UsersPage = () => {
                     </Thead>
                     <Tbody>
                         {
-                            usersData.map((item, index) => {
+                            users.map((item, index) => {
                                 return <TableItem key={`${item.email} ${index}`} {...item} />
                             })
                         }
                     </Tbody>
 
                     <TableCaption textAlign='left'>
-                        Mostrando {usersData.length} resultados
+                        Mostrando {pluralize(users.length, 'resultado')}
                     </TableCaption>
                 </Table>
             </TableContainer>
@@ -71,31 +59,37 @@ const UsersPage = () => {
     </Content>
 }
 
-const TableItem = (item: UserData) => {
-    const name = `${item.name} ${item.lastname}`
-    const isActive = item.status === 'Activo'
+const TableItem = (item: User) => {
+    const user = useAuthStore((state) => state.user)
+    const updateUserStatus = useAdminStore((state) => state.updateUserStatus)
+
+    const { id, name, lastname, email, role, isActive, invitedBy, createdAt } = item
+    const fullName = `${name} ${lastname}`
 
     return <Tr>
         <Td>
             <HStack spacing='4'>
-                <Avatar h='42px' w='42px' size='sm' bg='gray.300' color='blackAlpha.800' name={name} />
-                <Text>{name}</Text>
+                <Avatar h='42px' w='42px' size='sm' bg='gray.300' color='blackAlpha.800' name={fullName} />
+                <Text>{fullName}</Text>
             </HStack>
         </Td>
-        <Td>{item.role}</Td>
+        <Td>{role.name}</Td>
         <Td textAlign='center'>
-            <Badge colorScheme={statusColors[item.status]}>
-                {item.status}
+            <Badge colorScheme={isActive ? 'green' : 'red'}>
+                {isActive ? 'Activo' : 'Inhabilitado'}
             </Badge>
         </Td>
-        <Td>{item.email}</Td>
-        <Td>{item.signUpAt}</Td>
-        <Td>{item.invitedBy ?? '-'}</Td>
+        <Td>{email}</Td>
+        <Td>{new Date(createdAt).toLocaleString('es-AR', { dateStyle: 'medium', timeStyle: 'short', hour12: true })}</Td>
+        <Td>{invitedBy ? `${invitedBy.name} ${invitedBy.lastname}` : '-'} </Td>
 
         <Td>
-            <TableActionButton
-                icon={isActive ? <FiLock /> : <FiUnlock />}
-                tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'} />
+            {
+                user?.id !== id && <TableActionButton
+                    icon={isActive ? <FiUnlock /> : <FiLock />}
+                    tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'}
+                    onClick={() => updateUserStatus(id, !isActive)} />
+            }
         </Td>
     </Tr>
 }

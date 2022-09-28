@@ -15,19 +15,21 @@ model Role {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String        @db.VarChar(64)
-  lastname    String        @db.VarChar(64)
-  email       String        @unique @db.VarChar(128)
-  password    String        @db.VarChar(128)
-  role        Role          @relation(fields: [roleId], references: [id])
-  roleId      Int
-  isActive    Boolean       @default(true)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  invitedBy   Int?
-  AccessCode  AccessCode[]
-  UserSession UserSession[]
+  id           Int           @id @default(autoincrement())
+  name         String        @db.VarChar(64)
+  lastname     String        @db.VarChar(64)
+  email        String        @unique @db.VarChar(128)
+  password     String        @db.VarChar(128)
+  role         Role          @relation(fields: [roleId], references: [id])
+  roleId       Int
+  isActive     Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  invitedById  Int?
+  invitedBy    User?         @relation("InvitacionRecursiva", fields: [invitedById], references: [id])
+  invitedUsers User[]        @relation("InvitacionRecursiva")
+  AccessCode   AccessCode[]
+  UserSession  UserSession[]
 }
 
 model AccessCode {

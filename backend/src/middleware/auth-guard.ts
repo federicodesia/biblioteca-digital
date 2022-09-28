@@ -14,20 +14,23 @@ type Middleware = (
 ) => void
 
 const authGuard = async (
-    secret: string,
-    verifySession: boolean,
+    tokenType: 'refresh' | 'access',
     req: Request,
     next: NextFunction,
 ) => {
     const token = extractJwt(req)
 
     try {
+        const secret = tokenType === 'refresh'
+            ? envVars.jwtRefreshSecret
+            : envVars.jwtAccessSecret
+
         const decoded = jwt.verify(token, secret)
 
-        if (verifySession) {
+        if (tokenType === 'refresh') {
             const userSession = await prismaClient.userSession.findFirstOrThrow({
                 where: { token: token }
-            });
+            })
         }
 
         (req as any).jwtPayload = decoded
@@ -41,5 +44,5 @@ const authGuard = async (
     }
 }
 
-export const authGuardRefreshToken: Middleware = (req, _, next) => authGuard(envVars.jwtRefreshSecret, true, req, next)
-export const authGuardAccessToken: Middleware = (req, _, next) => authGuard(envVars.jwtAccessSecret, false, req, next)
+export const authGuardRefreshToken: Middleware = (req, _, next) => authGuard('refresh', req, next)
+export const authGuardAccessToken: Middleware = (req, _, next) => authGuard('access', req, next)

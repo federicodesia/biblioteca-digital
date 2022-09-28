@@ -7,6 +7,7 @@ import envVars from "../../utils/env-vars";
 import HTTPStatusCode from "../../utils/http-status-code";
 import { RoleType } from "../../types";
 import { FormException } from "../../utils/form-exception";
+import { CustomException } from "../../utils/custom-exception";
 
 export type JWTPayload = {
     user: Prisma.UserGetPayload<{ include: { role: true } }>
@@ -27,6 +28,11 @@ const getUser = async <Include extends Prisma.UserInclude>(
 const generateAccessToken = async (
     user: Prisma.UserGetPayload<{ include: { role: true } }>
 ) => {
+    if (!user.isActive) throw new CustomException(
+        HTTPStatusCode.NOT_FOUND,
+        'La cuenta se encuentra deshabilitada'
+    )
+
     const userWithoutPassword = excludeKey(user, 'password')
     return jwt.sign(
         { user: userWithoutPassword },

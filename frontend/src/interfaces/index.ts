@@ -12,6 +12,12 @@ export interface User {
     email: string
     role: Role
     isActive: boolean
+    invitedBy?: {
+        id: number
+        name: string
+        lastname: string
+        email: string
+    }
     createdAt: string
     updatedAt: string
 }

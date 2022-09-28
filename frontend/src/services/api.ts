@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import useAuthStore from "../zustand/stores/auth-store";
 import { accessTokenRequest } from "./auth-service";
 
@@ -8,21 +8,30 @@ export const api = axios.create({ baseURL: baseURL })
 export const refreshTokenApi = axios.create({ baseURL: baseURL })
 export const accessTokenApi = axios.create({ baseURL: baseURL })
 
-refreshTokenApi.interceptors.request.use(
-    (config) => {
-        if (config.headers) {
-            const userSession = useAuthStore.getState().userSession
-            if (userSession) config.headers['Authorization'] = `Bearer ${userSession.refreshToken}`
+const setRequestToken = (
+    config: AxiosRequestConfig<any>,
+    tokenType: 'refresh' | 'access'
+) => {
+    if (config.headers) {
+        const userSession = useAuthStore.getState().userSession
+        if (userSession) {
+            const { refreshToken, accessToken } = userSession
+            config.headers['Authorization'] = `Bearer ${tokenType === 'refresh' ? refreshToken : accessToken}`
         }
-        return config
     }
+    return config
+}
+
+refreshTokenApi.interceptors.request.use(
+    (config) => setRequestToken(config, 'refresh')
 )
 
 refreshTokenApi.interceptors.response.use(
     (response) => response,
     (error) => {
         if (axios.isAxiosError(error)) {
-            if (error.response?.status == 401) {
+            const status = error.response?.status
+            if (status === 401 || status === 403) {
                 useAuthStore.setState({ userSession: undefined })
             }
         }
@@ -30,12 +39,17 @@ refreshTokenApi.interceptors.response.use(
     }
 )
 
+accessTokenApi.interceptors.request.use(
+    (config) => setRequestToken(config, 'access')
+)
+
 accessTokenApi.interceptors.response.use(
     (response) => response,
     async (error) => {
 
         if (axios.isAxiosError(error)) {
-            if (error.response?.status == 401) {
+            const status = error.response?.status
+            if (status === 401 || status === 403) {
 
                 const userSession = useAuthStore.getState().userSession
                 if (userSession) {

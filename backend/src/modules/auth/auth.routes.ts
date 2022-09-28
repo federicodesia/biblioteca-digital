@@ -26,6 +26,11 @@ router.post('/login', async (req, res) => {
         [{ path: 'email', message: 'El correo electrónico no está registrado' }]
     )
 
+    if (!user.isActive) throw new FormException(
+        HTTPStatusCode.NOT_FOUND,
+        [{ path: 'email', message: 'La cuenta se encuentra deshabilitada' }]
+    )
+
     const matches = await bcrypt.compare(password, user.password)
     if (!matches) throw new FormException(
         HTTPStatusCode.FORBIDDEN,
@@ -63,6 +68,9 @@ router.post('/register', async (req, res) => {
             password: hashedPassword,
             role: {
                 connect: { id: accessCode.roleId }
+            },
+            invitedBy: {
+                connect: { id: accessCode.createdById }
             }
         },
         include: { role: true }

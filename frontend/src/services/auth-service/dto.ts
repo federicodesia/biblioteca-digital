@@ -1,4 +1,5 @@
 import { AccessCode } from "../../interfaces"
+import { ResponseType } from "../dto"
 
 export interface FormError {
     path: string
@@ -27,14 +28,6 @@ export type RegisterResponse = FormResponseType<{
     accessToken: string
     refreshToken: string
 }>
-
-export type ResponseType<T> = {
-    errorType: 'string'
-    error: string
-} | {
-    errorType: undefined,
-    data: T
-}
 
 export type AccessTokenResponse = ResponseType<{
     accessToken: string

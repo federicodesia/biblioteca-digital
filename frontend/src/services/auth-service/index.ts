@@ -1,4 +1,4 @@
-import { api, refreshTokenApi } from "..";
+import { api, refreshTokenApi } from "../api";
 import request from "../../utils/request";
 import { AccessTokenResponse, LoginResponse, RegisterResponse, VerifyAccessCodeResponse } from "./dto";
 
