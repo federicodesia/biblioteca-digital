@@ -12,3 +12,9 @@ export const updateUserStatusRequest = async (data: {
 }) => {
     return await request(() => accessTokenApi.patch<UserStatusResponse>('/users/update-user-status', data))
 }
+
+export const searchUserRequest = async (search: string) => {
+    return await request(() => accessTokenApi.get<UsersResponse>('users/search', {
+        params: { q: search }
+    }))
+}

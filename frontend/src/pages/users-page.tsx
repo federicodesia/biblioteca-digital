@@ -1,8 +1,9 @@
 import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
-import { useEffect } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
 import Content from "../components/content"
 import TableActionButton from "../components/table-action-button"
+import useDebounce from "../hooks/use-debounce"
 import { User } from "../interfaces"
 import pluralize from "../utils/pluralize"
 import useAdminStore from "../zustand/stores/admin-store"
@@ -17,6 +18,15 @@ const UsersPage = () => {
         getUsers()
     }, [])
 
+    const [searchValue, setSearchValue] = useState('')
+    const debouncedSearchValue = useDebounce(searchValue, 500)
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
+
+    const searchUser = useAdminStore((state) => state.searchUser)
+    useEffect(() => {
+        searchUser(debouncedSearchValue)
+    }, [debouncedSearchValue])
+
     return <Content>
         <VStack align='stretch' spacing='8'>
 
@@ -26,7 +36,7 @@ const UsersPage = () => {
 
             <InputGroup color='gray.600' maxW='400px'>
                 <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                <Input type='text' placeholder='Buscar por nombre, apellido o email...' />
+                <Input type='text' placeholder='Buscar por nombre, apellido o email...' value={searchValue} onChange={handleSearch} />
             </InputGroup>
 
             <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >

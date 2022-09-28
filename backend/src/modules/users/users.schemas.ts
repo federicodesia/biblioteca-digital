@@ -9,3 +9,9 @@ export const updateUserStatusSchema = z.object({
         isActive: z.boolean({ required_error: 'Ingresa el nuevo estado de la cuenta' })
     }),
 })
+
+export const searchUserSchema = z.object({
+    query: z.object({
+        q: z.string({ required_error: 'Ingresa el texto de búsqueda' }).optional()
+    })
+})

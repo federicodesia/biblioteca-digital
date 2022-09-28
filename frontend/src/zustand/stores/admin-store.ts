@@ -1,12 +1,13 @@
 import create from "zustand"
 import { User } from "../../interfaces"
-import { getUsersRequest, updateUserStatusRequest } from "../../services/users-service"
+import { getUsersRequest, searchUserRequest, updateUserStatusRequest } from "../../services/users-service"
 import { UsersResponse, UserStatusResponse } from "../../services/users-service/dto"
 
 interface AdminState {
     users: User[]
     getUsers: () => Promise<UsersResponse>,
-    updateUserStatus: (userId: number, isActive: boolean) => Promise<UserStatusResponse>
+    updateUserStatus: (userId: number, isActive: boolean) => Promise<UserStatusResponse>,
+    searchUser: (search: string) => Promise<UsersResponse>
 }
 
 const useAdminStore = create<AdminState>()(
@@ -23,6 +24,11 @@ const useAdminStore = create<AdminState>()(
                 const updatedUser = response.data.user
                 set((state) => ({ users: state.users.map(user => user.id === updatedUser.id ? updatedUser : user) }))
             }
+            return response
+        },
+        searchUser: async (search) => {
+            const response = await searchUserRequest(search)
+            if (response.errorType === undefined) set({ users: response.data.users })
             return response
         },
     })

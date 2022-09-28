@@ -8,7 +8,7 @@ import extractUser from "../../utils/extract-user";
 import HTTPStatusCode from "../../utils/http-status-code";
 import { schemaValidator } from "../../utils/schema-validator";
 import { validateRole } from "../../utils/validate-role";
-import { updateUserStatusSchema } from "./users.schemas";
+import { searchUserSchema, updateUserStatusSchema } from "./users.schemas";
 
 const router = Router()
 router.use(authGuardAccessToken)
@@ -75,6 +75,26 @@ router.patch('/update-user-status', async (req, res) => {
         }
         throw e
     }
+})
+
+router.get('/search', async (req, res) => {
+    const { query } = await schemaValidator(searchUserSchema, req)
+    const { q } = query
+
+    const result = await prismaClient.user.findMany({
+        where: q !== undefined ? {
+            OR: [
+                { name: { contains: q } },
+                { lastname: { contains: q } },
+                { email: { contains: q } }
+            ]
+        } : {},
+        include: userInclude
+    })
+
+    return res.json({
+        users: result.map(u => excludeKey(u, 'password'))
+    })
 })
 
 export default router
