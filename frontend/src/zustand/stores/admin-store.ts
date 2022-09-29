@@ -1,9 +1,7 @@
 import create from "zustand"
 import { AccessCode, RoleType, User } from "../../interfaces"
-import { createAccessCodeRequest, deleteAccessCodeRequest, searchAccessCodeRequest } from "../../services/access-codes-service"
-import { AccessCodesResponse, CreateAccessCodeResponse, DeleteAccessCodeResponse } from "../../services/access-codes-service/dto"
-import { searchUserRequest, updateUserStatusRequest } from "../../services/users-service"
-import { UsersResponse, UserStatusResponse } from "../../services/users-service/dto"
+import { AccessCodesResponse, createAccessCodeRequest, CreateAccessCodeResponse, deleteAccessCodeRequest, DeleteAccessCodeResponse, searchAccessCodeRequest } from "../../services/access-codes-service"
+import { searchUserRequest, updateUserStatusRequest, UsersResponse, UserStatusResponse } from "../../services/users-service"
 
 interface AdminState {
     users: User[]

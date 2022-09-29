@@ -1,8 +1,7 @@
 import create from "zustand";
 import { persist, subscribeWithSelector } from 'zustand/middleware'
 import { User, UserSession } from "../../interfaces";
-import { loginRequest, logoutRequest, registerRequest, verifyAccessCodeRequest } from "../../services/auth-service";
-import { LoginResponse, RegisterResponse, VerifyAccessCodeResponse } from "../../services/auth-service/dto";
+import { loginRequest, LoginResponse, logoutRequest, registerRequest, RegisterResponse, verifyAccessCodeRequest, VerifyAccessCodeResponse } from "../../services/auth-service";
 import jwt_decode from "jwt-decode";
 
 interface AuthState {
