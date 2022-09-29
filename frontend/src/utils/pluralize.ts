@@ -1,9 +1,10 @@
 const pluralize = (
     condition: number,
-    noun: string,
-    suffix: string = 's'
+    singular: string,
+    plural?: string
 ) => {
-    return `${condition} ${noun}${condition !== 1 ? suffix : ''}`
+    if(plural) return `${condition} ${condition !== 1 ? plural : singular}`
+    return `${condition} ${singular}${condition !== 1 ? 's' : ''}`
 }
 
 export default pluralize

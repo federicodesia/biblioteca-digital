@@ -1,4 +1,5 @@
-export type RoleType = 'Administrador' | 'Profesor' | 'Alumno'
+export const roles = ['Administrador', 'Profesor', 'Alumno'] as const
+export type RoleType = typeof roles[number]
 
 export interface Role {
     id: number

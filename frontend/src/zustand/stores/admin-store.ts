@@ -1,20 +1,26 @@
 import create from "zustand"
-import { User } from "../../interfaces"
-import { getUsersRequest, searchUserRequest, updateUserStatusRequest } from "../../services/users-service"
+import { AccessCode, RoleType, User } from "../../interfaces"
+import { createAccessCodeRequest, deleteAccessCodeRequest, searchAccessCodeRequest } from "../../services/access-codes-service"
+import { AccessCodesResponse, CreateAccessCodeResponse, DeleteAccessCodeResponse } from "../../services/access-codes-service/dto"
+import { searchUserRequest, updateUserStatusRequest } from "../../services/users-service"
 import { UsersResponse, UserStatusResponse } from "../../services/users-service/dto"
 
 interface AdminState {
     users: User[]
-    getUsers: () => Promise<UsersResponse>,
-    updateUserStatus: (userId: number, isActive: boolean) => Promise<UserStatusResponse>,
+    accessCodes: AccessCode[]
     searchUser: (search: string) => Promise<UsersResponse>
+    updateUserStatus: (userId: number, isActive: boolean) => Promise<UserStatusResponse>
+    searchAccessCode: (search: string) => Promise<AccessCodesResponse>
+    createAccessCode: (role: RoleType, expiresIn: number) => Promise<CreateAccessCodeResponse>
+    deleteAccessCode: (code: string) => Promise<DeleteAccessCodeResponse>
 }
 
 const useAdminStore = create<AdminState>()(
     (set) => ({
         users: [],
-        getUsers: async () => {
-            const response = await getUsersRequest()
+        accessCodes: [],
+        searchUser: async (search) => {
+            const response = await searchUserRequest(search)
             if (response.errorType === undefined) set({ users: response.data.users })
             return response
         },
@@ -22,15 +28,33 @@ const useAdminStore = create<AdminState>()(
             const response = await updateUserStatusRequest({ userId, isActive })
             if (response.errorType === undefined) {
                 const updatedUser = response.data.user
-                set((state) => ({ users: state.users.map(user => user.id === updatedUser.id ? updatedUser : user) }))
+                set((state) => ({
+                    users: state.users.map(user => user.id === updatedUser.id ? updatedUser : user)
+                }))
             }
             return response
         },
-        searchUser: async (search) => {
-            const response = await searchUserRequest(search)
-            if (response.errorType === undefined) set({ users: response.data.users })
+        searchAccessCode: async (search) => {
+            const response = await searchAccessCodeRequest(search)
+            if (response.errorType === undefined) set({
+                accessCodes: response.data.codes
+            })
             return response
         },
+        createAccessCode: async (role, expiresIn) => {
+            const response = await createAccessCodeRequest({ role, expiresIn })
+            if (response.errorType === undefined) set((state) => ({
+                accessCodes: [...state.accessCodes, response.data]
+            }))
+            return response
+        },
+        deleteAccessCode: async (code) => {
+            const response = await deleteAccessCodeRequest(code)
+            if (response.errorType === undefined) set((state) => ({
+                accessCodes: state.accessCodes.filter(c => c.code !== code)
+            }))
+            return response
+        }
     })
 )
 

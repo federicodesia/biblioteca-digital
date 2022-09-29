@@ -26,14 +26,24 @@ const userInclude: Prisma.UserInclude = {
 }
 
 router.get('/', async (req, res) => {
+    const { query } = await schemaValidator(searchUserSchema, req)
+    const { q } = query
+
     validateRole(['Administrador'], req)
 
-    const users = await prismaClient.user.findMany({
+    const result = await prismaClient.user.findMany({
+        where: q !== undefined ? {
+            OR: [
+                { name: { contains: q } },
+                { lastname: { contains: q } },
+                { email: { contains: q } }
+            ]
+        } : {},
         include: userInclude
     })
 
     return res.json({
-        users: users.map(user => excludeKey(user, 'password'))
+        users: result.map(user => excludeKey(user, 'password'))
     })
 })
 
@@ -75,26 +85,6 @@ router.patch('/update-user-status', async (req, res) => {
         }
         throw e
     }
-})
-
-router.get('/search', async (req, res) => {
-    const { query } = await schemaValidator(searchUserSchema, req)
-    const { q } = query
-
-    const result = await prismaClient.user.findMany({
-        where: q !== undefined ? {
-            OR: [
-                { name: { contains: q } },
-                { lastname: { contains: q } },
-                { email: { contains: q } }
-            ]
-        } : {},
-        include: userInclude
-    })
-
-    return res.json({
-        users: result.map(u => excludeKey(u, 'password'))
-    })
 })
 
 export default router

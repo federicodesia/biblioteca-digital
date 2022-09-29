@@ -5,18 +5,13 @@ import Content from "../components/content"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { User } from "../interfaces"
+import { formatDate } from "../utils/date"
 import pluralize from "../utils/pluralize"
 import useAdminStore from "../zustand/stores/admin-store"
 import useAuthStore from "../zustand/stores/auth-store"
 
 const UsersPage = () => {
-
     const users = useAdminStore((state) => state.users)
-    const getUsers = useAdminStore((state) => state.getUsers)
-
-    useEffect(() => {
-        getUsers()
-    }, [])
 
     const [searchValue, setSearchValue] = useState('')
     const debouncedSearchValue = useDebounce(searchValue, 500)
@@ -90,7 +85,7 @@ const TableItem = (item: User) => {
             </Badge>
         </Td>
         <Td>{email}</Td>
-        <Td>{new Date(createdAt).toLocaleString('es-AR', { dateStyle: 'medium', timeStyle: 'short', hour12: true })}</Td>
+        <Td>{formatDate(createdAt)}</Td>
         <Td>{invitedBy ? `${invitedBy.name} ${invitedBy.lastname}` : '-'} </Td>
 
         <Td>

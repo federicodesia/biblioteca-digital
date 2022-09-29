@@ -32,20 +32,24 @@ const Navbar = ({ showSidebarButton, onOpen }: NavbarProps) => {
 }
 
 const UserMenu = () => {
-    const user = useAuthStore((state) => state.user)
-    const logout = useAuthStore((state) => state.logout)
+    const { user, logout } = useAuthStore((state) => ({
+        user: state.user,
+        logout: state.logout
+    }))
+
+    const fullname = `${user?.name} ${user?.lastname}`
 
     return <Menu>
         <MenuButton py='2' fontSize='sm'>
             <HStack spacing='3'>
-                <Avatar h='42px' w='42px' size='sm' bg='gray.300' name='Nombre usuario' />
+                <Avatar h='42px' w='42px' size='sm' bg='gray.300' color='gray.700' name={fullname} />
 
                 <VStack
                     display={{ base: 'none', md: 'flex' }}
                     alignItems='flex-start'
                     spacing='0'>
 
-                    <Text fontWeight='500'> {`${user?.name} ${user?.lastname}`} </Text>
+                    <Text fontWeight='500'> {fullname} </Text>
                     <Text color='gray.500'> {user?.role.name} </Text>
                 </VStack>
             </HStack>
