@@ -1,7 +1,6 @@
 import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
 import { ChangeEvent, useEffect, useState } from "react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
-import Content from "../components/content"
 import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
@@ -23,46 +22,44 @@ const UsersPage = () => {
         searchUser(debouncedSearchValue)
     }, [debouncedSearchValue])
 
-    return <Content>
-        <VStack align='stretch' spacing='8'>
+    return <VStack align='stretch' spacing='8'>
 
-            <Heading size='md' fontWeight='600'>
-                Usuarios
-            </Heading>
+        <Heading size='md' fontWeight='600'>
+            Usuarios
+        </Heading>
 
-            <InputGroup color='gray.600' maxW='400px'>
-                <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                <Input type='text' placeholder='Buscar por nombre, apellido o email...' value={searchValue} onChange={handleSearch} />
-            </InputGroup>
+        <InputGroup color='gray.600' maxW='400px'>
+            <InputLeftElement pointerEvents='none' children={<FiSearch />} />
+            <Input type='text' placeholder='Buscar por nombre, apellido o email...' value={searchValue} onChange={handleSearch} />
+        </InputGroup>
 
-            <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
-                <Table colorScheme='gray' fontSize='15' >
-                    <Thead>
-                        <Tr>
-                            <Th>Nombre</Th>
-                            <Th>Tipo de usuario</Th>
-                            <Th textAlign='center'>Estado</Th>
-                            <Th>Correo electrónico</Th>
-                            <Th>Fecha de registro</Th>
-                            <Th>Invitado por</Th>
-                            <Th w='0' />
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {
-                            users.map((item, index) => {
-                                return <TableItem key={`${item.email} ${index}`} {...item} />
-                            })
-                        }
-                    </Tbody>
+        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+            <Table colorScheme='gray' fontSize='15' >
+                <Thead>
+                    <Tr>
+                        <Th>Nombre</Th>
+                        <Th>Tipo de usuario</Th>
+                        <Th textAlign='center'>Estado</Th>
+                        <Th>Correo electrónico</Th>
+                        <Th>Fecha de registro</Th>
+                        <Th>Invitado por</Th>
+                        <Th w='0' />
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    {
+                        users.map((item, index) => {
+                            return <TableItem key={`${item.email} ${index}`} {...item} />
+                        })
+                    }
+                </Tbody>
 
-                    <TableCaption textAlign='left'>
-                        Mostrando {pluralize(users.length, 'resultado')}
-                    </TableCaption>
-                </Table>
-            </TableContainer>
-        </VStack>
-    </Content>
+                <TableCaption textAlign='left'>
+                    Mostrando {pluralize(users.length, 'resultado')}
+                </TableCaption>
+            </Table>
+        </TableContainer>
+    </VStack>
 }
 
 const TableItem = (item: User) => {

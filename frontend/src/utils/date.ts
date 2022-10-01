@@ -6,7 +6,7 @@ const fromStringOrDate = (payload: Payload) => {
 
 export const formatDate = (payload: Payload) => {
     return fromStringOrDate(payload).toLocaleString('default', {
-        dateStyle: 'medium',
+        dateStyle: 'short',
         timeStyle: 'short',
         hour12: true
     })

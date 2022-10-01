@@ -11,11 +11,8 @@ const Navbar = ({ showSidebarButton, onOpen }: NavbarProps) => {
     return (
         <Flex
             h='20'
-            px='8'
+            px={{base: '4', md: '8'}}
             alignItems='center'
-            bg='white'
-            borderBottomWidth='1px'
-            borderBottomColor='gray.200'
             justifyContent={showSidebarButton ? 'space-between' : 'flex-end'}>
 
             {
@@ -55,8 +52,8 @@ const UserMenu = () => {
             </HStack>
         </MenuButton>
 
-        <MenuList fontSize='sm'>
-            <MenuItem icon={<FiLogOut />} onClick={logout}>
+        <MenuList fontSize='sm' rounded='2xl' border='none' shadow='lg'>
+            <MenuItem py='2' px='8' icon={<FiLogOut />} onClick={logout}>
                 Cerrar sesión
             </MenuItem>
         </MenuList>

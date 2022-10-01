@@ -1,8 +1,7 @@
-import { Box, CloseButton, Flex, Heading, Stack, Text } from "@chakra-ui/react"
+import { Box, CloseButton, Flex, Image, Stack, Text } from "@chakra-ui/react"
 import { ReactNode } from "react"
 import { FiBook, FiHome, FiKey, FiUpload, FiUsers } from "react-icons/fi"
 import { useMatch, useResolvedPath } from "react-router-dom"
-import useColorScheme from "../hooks/use-color-scheme"
 import { RoleType } from "../interfaces"
 import useAuthStore from "../zustand/stores/auth-store"
 import Link from "./link"
@@ -51,27 +50,18 @@ interface SidebarProps {
 
 const Sidebar = ({ onClose }: SidebarProps) => {
     const user = useAuthStore((state) => state.user)
-    const { secondaryScheme } = useColorScheme()
 
     return <Box
         transition='1s ease'
         bg='white'
-        borderRight='1px'
-        borderRightColor='gray.200'
-        h='full'>
+        rounded='2xl'
+        h='full'
+        py='2'
+        shadow='rgba(149, 157, 165, 0.05) 0px 8px 24px'
+        overflowY='auto'>
 
         <Flex h='20' alignItems='center' mx='6' justifyContent='space-between'>
-            <Heading
-                fontWeight={600}
-                fontSize='lg'
-                color={secondaryScheme[700]}>
-
-                Biblioteca digital
-                <br />
-                <Text as='span' color='gray.800' fontSize='sm'>
-                    Centro Universitario Chivilcoy
-                </Text>
-            </Heading>
+            <Image src='logo_cuch.png' objectFit='contain' h='58px' />
 
             <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
         </Flex>
@@ -110,8 +100,6 @@ const Sidebar = ({ onClose }: SidebarProps) => {
 }
 
 const NavigationItem = ({ to, text, icon }: NavigationItemProps) => {
-    const { primaryScheme } = useColorScheme()
-
     const resolved = useResolvedPath(to);
     const match = useMatch({ path: resolved.pathname, end: true });
     const isActive = match !== null
@@ -124,18 +112,13 @@ const NavigationItem = ({ to, text, icon }: NavigationItemProps) => {
             px='4'
             py='3'
             fontWeight={isActive ? 500 : 400}
-            color={isActive ? primaryScheme[700] : 'gray.700'}
-            bg={isActive ? primaryScheme[50] : 'transparent'}
-            _hover={{ bg: isActive ? primaryScheme[100] : 'gray.100' }}>
+            color={isActive ? 'black' : 'gray.700'}
+            bg={isActive ? 'blue.50' : 'transparent'}
+            _hover={{ bg: isActive ? 'blue.50' : 'gray.100' }}>
 
-            <Flex
-                align='center'
-                gap='4'>
-
+            <Flex align='center' gap='4'>
                 {icon}
-                <Text>
-                    {text}
-                </Text>
+                <Text>{text}</Text>
             </Flex>
         </Link>
     )

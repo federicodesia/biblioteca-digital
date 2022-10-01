@@ -1,6 +1,5 @@
 import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Textarea, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
 import { FiCheck, FiEye, FiSearch, FiX } from "react-icons/fi"
-import Content from "../components/content"
 import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
 
@@ -29,45 +28,43 @@ const uploadRequestsData: UploadRequestData[] = [
 ]
 
 const UploadRequestsPage = () => {
-    return <Content>
-        <VStack align='stretch' spacing='8'>
+    return <VStack align='stretch' spacing='8'>
 
-            <Heading size='md' fontWeight='600'>
-                Solicitudes de carga
-            </Heading>
+        <Heading size='md' fontWeight='600'>
+            Solicitudes de carga
+        </Heading>
 
-            <InputGroup color='gray.600' maxW='400px'>
-                <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                <Input type='text' placeholder='Buscar por título o persona...' />
-            </InputGroup>
+        <InputGroup color='gray.600' maxW='400px'>
+            <InputLeftElement pointerEvents='none' children={<FiSearch />} />
+            <Input type='text' placeholder='Buscar por título o persona...' />
+        </InputGroup>
 
-            <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
-                <Table colorScheme='gray' fontSize='15' >
-                    <Thead>
-                        <Tr>
-                            <Th>Título</Th>
-                            <Th>Descripción</Th>
-                            <Th textAlign='center'>Estado</Th>
-                            <Th>Solicitado por</Th>
-                            <Th>Fecha de solicitud</Th>
-                            <Th w='0' />
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {
-                            uploadRequestsData.map((item, index) => {
-                                return <TableItem key={`${item.id} ${index}`} {...item} />
-                            })
-                        }
-                    </Tbody>
+        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+            <Table colorScheme='gray' fontSize='15' >
+                <Thead>
+                    <Tr>
+                        <Th>Título</Th>
+                        <Th>Descripción</Th>
+                        <Th textAlign='center'>Estado</Th>
+                        <Th>Solicitado por</Th>
+                        <Th>Fecha de solicitud</Th>
+                        <Th w='0' />
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    {
+                        uploadRequestsData.map((item, index) => {
+                            return <TableItem key={`${item.id} ${index}`} {...item} />
+                        })
+                    }
+                </Tbody>
 
-                    <TableCaption textAlign='left'>
-                        Mostrando {uploadRequestsData.length} resultados
-                    </TableCaption>
-                </Table>
-            </TableContainer>
-        </VStack>
-    </Content>
+                <TableCaption textAlign='left'>
+                    Mostrando {uploadRequestsData.length} resultados
+                </TableCaption>
+            </Table>
+        </TableContainer>
+    </VStack>
 }
 
 const TableItem = (item: UploadRequestData) => {

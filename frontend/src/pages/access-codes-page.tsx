@@ -1,7 +1,6 @@
 import { Badge, Button, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, ThemeTypings, Tr, useClipboard, useToast, VStack } from "@chakra-ui/react"
 import { ChangeEvent, useEffect, useState } from "react"
 import { FiClipboard, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi"
-import Content from "../components/content"
 import GenerateAccessCodeModal from "../components/modals/generate-access-code"
 import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
@@ -30,54 +29,52 @@ const AccessCodesPage = () => {
         searchAccessCode(debouncedSearchValue)
     }, [debouncedSearchValue])
 
-    return <Content >
-        <VStack align='stretch' spacing='8'>
+    return <VStack align='stretch' spacing='8'>
 
-            <Heading size='md' fontWeight='600'>
-                Códigos de acceso
-            </Heading>
+        <Heading size='md' fontWeight='600'>
+            Códigos de acceso
+        </Heading>
 
-            <HStack spacing='4' justify='space-between'>
-                <InputGroup color='gray.600' maxW='350px'>
-                    <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-                    <Input type='text' placeholder='Buscar código o persona...' value={searchValue} onChange={handleSearch} />
-                </InputGroup>
+        <HStack spacing='4' justify='space-between'>
+            <InputGroup color='gray.600' maxW='350px'>
+                <InputLeftElement pointerEvents='none' children={<FiSearch />} />
+                <Input type='text' placeholder='Buscar código o persona...' value={searchValue} onChange={handleSearch} />
+            </InputGroup>
 
-                <GenerateAccessCodeModal trigger={
-                    <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
-                        Generar nuevo
-                    </Button>
-                } />
-            </HStack>
+            <GenerateAccessCodeModal trigger={
+                <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+                    Generar nuevo
+                </Button>
+            } />
+        </HStack>
 
-            <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
-                <Table colorScheme='gray' fontSize='15' >
-                    <Thead>
-                        <Tr>
-                            <Th>Código</Th>
-                            <Th>Tipo de usuario</Th>
-                            <Th textAlign='center'>Estado</Th>
-                            <Th>Creado por</Th>
-                            <Th>Fecha de creación</Th>
-                            <Th textAlign='center'>Expira en</Th>
-                            <Th w='0' />
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {
-                            accessCodes.map(item => {
-                                return <TableItem key={item.code} {...item} />
-                            })
-                        }
-                    </Tbody>
+        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+            <Table colorScheme='gray' fontSize='15' >
+                <Thead>
+                    <Tr>
+                        <Th>Código</Th>
+                        <Th>Tipo de usuario</Th>
+                        <Th textAlign='center'>Estado</Th>
+                        <Th>Creado por</Th>
+                        <Th>Fecha de creación</Th>
+                        <Th textAlign='center'>Expira en</Th>
+                        <Th w='0' />
+                    </Tr>
+                </Thead>
+                <Tbody>
+                    {
+                        accessCodes.map(item => {
+                            return <TableItem key={item.code} {...item} />
+                        })
+                    }
+                </Tbody>
 
-                    <TableCaption textAlign='left'>
-                        Mostrando {pluralize(accessCodes.length, 'resultado')}
-                    </TableCaption>
-                </Table>
-            </TableContainer>
-        </VStack>
-    </Content>
+                <TableCaption textAlign='left'>
+                    Mostrando {pluralize(accessCodes.length, 'resultado')}
+                </TableCaption>
+            </Table>
+        </TableContainer>
+    </VStack>
 }
 
 const TableItem = (item: AccessCode) => {

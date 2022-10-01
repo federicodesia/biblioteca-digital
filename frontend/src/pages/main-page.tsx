@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from 'react';
-import { Box, Flex, Drawer, DrawerContent, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import { Box, Drawer, DrawerContent, useDisclosure, useMediaQuery, VStack, HStack } from '@chakra-ui/react';
 import { down } from '../theme/breakpoints';
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
@@ -14,51 +14,47 @@ const MainPage = ({ children }: MainPageProps) => {
     const [isDownMd] = useMediaQuery(down('md'))
     useEffect(() => onClose(), [isDownMd])
 
-    return <Flex
-        position='fixed'
-        top='0'
-        left='0'
-        bottom='0'
-        right='0'
-        overflow='hidden'
-        bg='gray.100'>
-
+    return <Box position='relative' minH='100vh'>
         {
-            !isDownMd && <Box w={64} flexShrink={0} >
-                <Sidebar onClose={() => onClose} />
-            </Box>
+            !isDownMd && <>
+                <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(45deg, blue, cyan, teal, green, pink, purple)' opacity='0.1' />
+                <Box position='absolute' top='0' left='0' bottom='0' right='0' bgGradient='linear(45deg, purple, transparent)' opacity='0.05' />
+            </>
         }
 
-        <Drawer
-            autoFocus={false}
-            isOpen={isOpen}
-            placement='left'
-            size='full'
-            onClose={onClose}
-            onOverlayClick={onClose}>
-
-            <DrawerContent>
-                <Sidebar onClose={onClose} />
-            </DrawerContent>
-        </Drawer>
-
-        <Flex direction='column' flex='1'>
-            <Navbar showSidebarButton={isDownMd} onOpen={onOpen} />
-
-            <Box flex='1' position='relative' overflowY='auto'>
-                <Box
-                    position='absolute'
-                    top='0'
-                    left='0'
-                    right='0'
-                    p='8'>
-
-                    {children}
+        <HStack position='absolute' top='0' left='0' bottom='0' right='0' p='4' spacing='4' align='stretch'>
+            {
+                !isDownMd && <Box w={64} flexShrink={0} >
+                    <Sidebar onClose={() => onClose} />
                 </Box>
-            </Box>
-        </Flex>
-    </Flex>
+            }
 
+            <Drawer
+                autoFocus={false}
+                isOpen={isOpen}
+                placement='left'
+                size='full'
+                onClose={onClose}
+                onOverlayClick={onClose}>
+
+                <DrawerContent>
+                    <Sidebar onClose={onClose} />
+                </DrawerContent>
+            </Drawer>
+
+            <HStack flex='1' align='stretch' justify='center'>
+                <VStack flex='1' maxW='8xl' align='stretch' spacing='4'>
+                    <Navbar showSidebarButton={isDownMd} onOpen={onOpen} />
+
+                    <Box flex='1' bg='white' rounded='2xl' shadow='rgba(149, 157, 165, 0.05) 0px 8px 24px' position='relative'>
+                        <Box position='absolute' top='0' left='0' right='0' bottom='0' p={{ base: '4', md: '12' }} overflowY='auto'>
+                            {children}
+                        </Box>
+                    </Box>
+                </VStack>
+            </HStack>
+        </HStack>
+    </Box>
 }
 
 export default MainPage
