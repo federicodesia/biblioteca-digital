@@ -1,6 +1,7 @@
-import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
+import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Textarea, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
 import { FiCheck, FiEye, FiSearch, FiX } from "react-icons/fi"
 import Content from "../components/content"
+import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
 
 type Status = 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
@@ -88,8 +89,27 @@ const TableItem = (item: UploadRequestData) => {
                 <TableActionButton icon={<FiEye />} tooltip='Ver detalles' />
                 {
                     status === 'Esperando respuesta' && <>
-                        <TableActionButton icon={<FiX />} tooltip='Rechazar solicitud' />
-                        <TableActionButton icon={<FiCheck />} tooltip='Aceptar solicitud' />
+
+                        <ImageModal
+                            src='pending_approval.svg'
+                            title='Rechazar solicitud de carga'
+                            description='¿Estás seguro que quieres rechazar esta solicitud? Una vez rechazada, el documento será eliminado.'
+                            content={
+                                <Textarea resize='none' placeholder='Ingresa el motivo por el cual se rechaza' />
+                            }
+                            buttonText='Rechazar'
+                            trigger={
+                                <TableActionButton icon={<FiX />} tooltip='Rechazar solicitud' />
+                            } />
+
+                        <ImageModal
+                            src='terms.svg'
+                            title='Aceptar solicitud de carga'
+                            description='¿Estás seguro que quieres aceptar esta solicitud? Una vez aceptada, el documento será visible por todos los usuarios.'
+                            buttonText='Aceptar'
+                            trigger={
+                                <TableActionButton icon={<FiCheck />} tooltip='Aceptar solicitud' />
+                            } />
                     </>
                 }
             </HStack>

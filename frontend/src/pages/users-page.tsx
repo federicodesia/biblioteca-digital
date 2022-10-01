@@ -2,6 +2,7 @@ import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Ta
 import { ChangeEvent, useEffect, useState } from "react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
 import Content from "../components/content"
+import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { User } from "../interfaces"
@@ -90,9 +91,24 @@ const TableItem = (item: User) => {
 
         <Td>
             {
-                user?.id !== id && <TableActionButton
-                    icon={isActive ? <FiUnlock /> : <FiLock />}
-                    tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'}
+                user?.id !== id && <ImageModal
+                    src='safe.svg'
+                    title={
+                        isActive
+                            ? 'Inhabilitar cuenta de usuario'
+                            : 'Habilitar cuenta de usuario'
+                    }
+                    description={
+                        isActive
+                            ? '¿Estás seguro que quieres inhabilitar esta cuenta? Si continúas, el usuario no tendrá acceso al sistema.'
+                            : '¿Estás seguro que quieres habilitar esta cuenta? Si continúas, el usuario volverá a tener acceso al sistema.'
+                    }
+                    buttonText={isActive ? 'Inhabilitar' : 'Habilitar'}
+                    trigger={
+                        <TableActionButton
+                            icon={isActive ? <FiUnlock /> : <FiLock />}
+                            tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'} />
+                    }
                     onClick={() => updateUserStatus(id, !isActive)} />
             }
         </Td>

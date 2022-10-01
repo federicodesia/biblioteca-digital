@@ -3,6 +3,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { FiClipboard, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi"
 import Content from "../components/content"
 import GenerateAccessCodeModal from "../components/modals/generate-access-code"
+import ImageModal from "../components/modals/image-modal"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { AccessCode } from "../interfaces"
@@ -132,7 +133,15 @@ const TableItem = (item: AccessCode) => {
 
         <Td>
             <HStack spacing='2'>
-                <TableActionButton icon={<FiTrash2 />} tooltip='Eliminar código' onClick={() => deleteAccessCode(code)} />
+                <ImageModal
+                    src='notify.svg'
+                    title='Eliminar código de acceso'
+                    description='¿Estás seguro que quieres eliminar este código de acceso? Después no podrás deshacer esta acción.'
+                    buttonText='Eliminar'
+                    onClick={() => deleteAccessCode(code)}
+                    trigger={
+                        <TableActionButton icon={<FiTrash2 />} tooltip='Eliminar código' />
+                    } />
                 <TableActionButton icon={<FiClipboard />} tooltip='Copiar al portapapeles' onClick={handleCopyToClipboard} />
             </HStack>
         </Td>
