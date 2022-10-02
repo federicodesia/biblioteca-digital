@@ -15,21 +15,23 @@ model Role {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String        @db.VarChar(64)
-  lastname     String        @db.VarChar(64)
-  email        String        @unique @db.VarChar(128)
-  password     String        @db.VarChar(128)
-  role         Role          @relation(fields: [roleId], references: [id])
-  roleId       Int
-  isActive     Boolean       @default(true)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  invitedById  Int?
-  invitedBy    User?         @relation("InvitacionRecursiva", fields: [invitedById], references: [id])
-  invitedUsers User[]        @relation("InvitacionRecursiva")
-  AccessCode   AccessCode[]
-  UserSession  UserSession[]
+  id            Int             @id @default(autoincrement())
+  name          String          @db.VarChar(64)
+  lastname      String          @db.VarChar(64)
+  email         String          @unique @db.VarChar(128)
+  password      String          @db.VarChar(128)
+  role          Role            @relation(fields: [roleId], references: [id])
+  roleId        Int
+  isActive      Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  invitedById   Int?
+  invitedBy     User?           @relation("InvitacionRecursiva", fields: [invitedById], references: [id])
+  invitedUsers  User[]          @relation("InvitacionRecursiva")
+  AccessCode    AccessCode[]
+  UserSession   UserSession[]
+  Document      Document[]
+  UploadRequest UploadRequest[]
 }
 
 model AccessCode {
@@ -50,4 +52,33 @@ model UserSession {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Document {
+  id            Int            @id @default(autoincrement())
+  title         String         @db.VarChar(128)
+  description   String         @db.VarChar(256)
+  createdBy     User           @relation(fields: [createdById], references: [id])
+  createdById   Int
+  publishedAt   DateTime?
+  UploadRequest UploadRequest?
+}
+
+model UploadRequestState {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique @db.VarChar(32)
+  UploadRequest UploadRequest[]
+}
+
+model UploadRequest {
+  id           Int                @id @default(autoincrement())
+  document     Document           @relation(fields: [documentId], references: [id])
+  documentId   Int                @unique
+  requestedAt  DateTime           @default(now())
+  status       UploadRequestState @relation(fields: [statusId], references: [id])
+  statusId     Int
+  review       String?            @db.VarChar(128)
+  reviewedBy   User?              @relation(fields: [reviewedById], references: [id])
+  reviewedById Int?
+  reviewedAt   DateTime?
 }

@@ -25,6 +25,14 @@ async function seed() {
             }
         }
     })
+
+    await prisma.uploadRequestState.createMany({
+        data: [
+            { name: 'Esperando respuesta' },
+            { name: 'Aceptado' },
+            { name: 'Rechazado' }
+        ]
+    })
 }
 
 seed()
