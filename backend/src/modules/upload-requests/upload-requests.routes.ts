@@ -1,23 +1,41 @@
 import { Router } from "express"
+import multer from "multer"
 import { prismaClient } from "../.."
 import { authGuardAccessToken } from "../../middleware/auth-guard"
 import { uploadRequestIncude } from "../../types/prisma"
 import { CustomException } from "../../utils/custom-exception"
 import extractUser from "../../utils/extract-user"
+import { FormException } from "../../utils/form-exception"
 import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
 import { validateRole } from "../../utils/validate-role"
 import { answerUploadRequestSchema, createUploadRequestSchema, searchUploadRequestSchema } from "./upload-requests.schemas"
+import fs from "fs"
+import { customAlphabet } from "nanoid"
 
 const router = Router()
 router.use(authGuardAccessToken)
 
-router.post('/', async (req, res) => {
+const uploadPdf = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+        fileSize: 16 * 1024 * 1024
+    },
+    fileFilter: async (req, file, cb) => {
+        if (file.mimetype !== 'application/pdf') return cb(new FormException(
+            HTTPStatusCode.NOT_ACCEPTABLE,
+            [{ path: file.fieldname, message: 'El archivo debe ser formato .PDF' }]
+        ))
+
+        return cb(null, true)
+    }
+})
+
+router.post('/', uploadPdf.single('document'), async (req, res) => {
     const { body } = await schemaValidator(createUploadRequestSchema, req)
     const { title, description } = body
 
     const { user } = extractUser(req)
-
     const verify = await prismaClient.uploadRequest.findMany({
         where: {
             document: { createdById: user.id },
@@ -30,13 +48,30 @@ router.post('/', async (req, res) => {
         'No puedes tener más de tres solicitudes de carga pendientes'
     )
 
+    const { file } = req
+    if (!file) throw new CustomException(
+        HTTPStatusCode.INTERNAL_SERVER_ERROR,
+        'No se encontró el documento'
+    )
+
+    const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+    const nanoid = customAlphabet(alphabet, 32)
+
+    const extension = file.mimetype.split('/').at(-1)?.toLowerCase()
+    const fileName = `${nanoid()}.${extension}`
+    
+    const path = 'uploads'
+    if (!fs.existsSync(path)) fs.mkdirSync(path)
+    fs.writeFileSync(`${path}/${fileName}`, file.buffer)
+
     const document = await prismaClient.document.create({
         data: {
             title: title,
             description: description,
             createdBy: {
                 connect: { id: user.id }
-            }
+            },
+            fileName: fileName
         }
     })
 

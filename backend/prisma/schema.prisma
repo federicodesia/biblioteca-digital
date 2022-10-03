@@ -61,6 +61,7 @@ model Document {
   createdBy     User           @relation(fields: [createdById], references: [id])
   createdById   Int
   publishedAt   DateTime?
+  fileName      String?        @db.VarChar(64)
   UploadRequest UploadRequest?
 }
 
