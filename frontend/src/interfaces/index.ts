@@ -40,3 +40,32 @@ export interface UserSession {
     refreshToken: string
     accessToken: string
 }
+
+export interface Document {
+    id: number
+    title: string
+    description: string
+    createdBy: {
+        id: number
+        name: string
+        lastname: string
+    }
+    publishedAt?: string
+}
+
+export interface UploadRequest {
+    id: number
+    document: Document
+    requestedAt: string
+    status: {
+        id: number
+        name: 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
+    }
+    review?: string
+    reviewedBy?: {
+        id: number
+        name: string
+        lastname: string
+    }
+    reviewedAt?: string
+}

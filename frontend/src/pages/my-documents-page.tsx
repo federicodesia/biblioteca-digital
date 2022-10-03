@@ -1,6 +1,6 @@
 import { Button, Heading, VStack, HStack } from '@chakra-ui/react';
 import { FiPlus } from 'react-icons/fi';
-import UploadRequestModal from '../components/modals/upload-request-modal';
+import CreateUploadRequestModal from '../components/modals/create-upload-request';
 
 const MyDocumentsPage = () => {
   return <VStack align='stretch' spacing='8'>
@@ -10,11 +10,12 @@ const MyDocumentsPage = () => {
     </Heading>
 
     <HStack spacing='4' justify='end'>
-      <UploadRequestModal trigger={
-        <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
-          Solicitar carga
-        </Button>
-      } />
+      <CreateUploadRequestModal
+        trigger={
+          <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+            Solicitar carga
+          </Button>
+        } />
     </HStack>
   </VStack>
 }

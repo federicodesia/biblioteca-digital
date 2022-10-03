@@ -2,7 +2,7 @@ import { Badge, Button, Heading, HStack, Input, InputGroup, InputLeftElement, Ta
 import { ChangeEvent, useEffect, useState } from "react"
 import { FiClipboard, FiPlus, FiSearch, FiTrash2 } from "react-icons/fi"
 import GenerateAccessCodeModal from "../components/modals/generate-access-code"
-import ImageModal from "../components/modals/image-modal"
+import DeleteAccessCodeModal from "../components/modals/delete-access-code"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { AccessCode } from "../interfaces"
@@ -18,13 +18,13 @@ const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
 }
 
 const AccessCodesPage = () => {
-    const accessCodes = useAdminStore((state) => state.accessCodes)
+    const accessCodes = useAdminStore((state) => state.accessCodes.items)
 
     const [searchValue, setSearchValue] = useState('')
     const debouncedSearchValue = useDebounce(searchValue, 500)
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
 
-    const searchAccessCode = useAdminStore((state) => state.searchAccessCode)
+    const searchAccessCode = useAdminStore((state) => state.accessCodes.search)
     useEffect(() => {
         searchAccessCode(debouncedSearchValue)
     }, [debouncedSearchValue])
@@ -92,7 +92,7 @@ const TableItem = (item: AccessCode) => {
     const toastId = item.code
     const toast = useToast()
 
-    const deleteAccessCode = useAdminStore((state) => state.deleteAccessCode)
+    const deleteAccessCode = useAdminStore((state) => state.accessCodes.delete)
     const handleCopyToClipboard = () => {
         onCopy()
         if (toast.isActive(toastId)) return
@@ -130,15 +130,12 @@ const TableItem = (item: AccessCode) => {
 
         <Td>
             <HStack spacing='2'>
-                <ImageModal
-                    src='notify.svg'
-                    title='Eliminar código de acceso'
-                    description='¿Estás seguro que quieres eliminar este código de acceso? Después no podrás deshacer esta acción.'
-                    buttonText='Eliminar'
-                    onClick={() => deleteAccessCode(code)}
+                <DeleteAccessCodeModal
+                    accessCode={item}
                     trigger={
                         <TableActionButton icon={<FiTrash2 />} tooltip='Eliminar código' />
                     } />
+
                 <TableActionButton icon={<FiClipboard />} tooltip='Copiar al portapapeles' onClick={handleCopyToClipboard} />
             </HStack>
         </Td>

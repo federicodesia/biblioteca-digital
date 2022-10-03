@@ -1,7 +1,7 @@
 import { Avatar, Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Text, Th, Thead, Tr, VStack } from "@chakra-ui/react"
 import { ChangeEvent, useEffect, useState } from "react"
 import { FiLock, FiSearch, FiUnlock } from "react-icons/fi"
-import ImageModal from "../components/modals/image-modal"
+import UpdateUserStatusModal from "../components/modals/update-user-status"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { User } from "../interfaces"
@@ -11,13 +11,13 @@ import useAdminStore from "../zustand/stores/admin-store"
 import useAuthStore from "../zustand/stores/auth-store"
 
 const UsersPage = () => {
-    const users = useAdminStore((state) => state.users)
+    const users = useAdminStore((state) => state.users.items)
 
     const [searchValue, setSearchValue] = useState('')
     const debouncedSearchValue = useDebounce(searchValue, 500)
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
 
-    const searchUser = useAdminStore((state) => state.searchUser)
+    const searchUser = useAdminStore((state) => state.users.search)
     useEffect(() => {
         searchUser(debouncedSearchValue)
     }, [debouncedSearchValue])
@@ -64,7 +64,6 @@ const UsersPage = () => {
 
 const TableItem = (item: User) => {
     const user = useAuthStore((state) => state.user)
-    const updateUserStatus = useAdminStore((state) => state.updateUserStatus)
 
     const { id, name, lastname, email, role, isActive, invitedBy, createdAt } = item
     const fullName = `${name} ${lastname}`
@@ -88,25 +87,14 @@ const TableItem = (item: User) => {
 
         <Td>
             {
-                user?.id !== id && <ImageModal
-                    src='safe.svg'
-                    title={
-                        isActive
-                            ? 'Inhabilitar cuenta de usuario'
-                            : 'Habilitar cuenta de usuario'
-                    }
-                    description={
-                        isActive
-                            ? '¿Estás seguro que quieres inhabilitar esta cuenta? Si continúas, el usuario no tendrá acceso al sistema.'
-                            : '¿Estás seguro que quieres habilitar esta cuenta? Si continúas, el usuario volverá a tener acceso al sistema.'
-                    }
-                    buttonText={isActive ? 'Inhabilitar' : 'Habilitar'}
+                user?.id !== id && <UpdateUserStatusModal
+                    user={item}
+                    active={!isActive}
                     trigger={
                         <TableActionButton
                             icon={isActive ? <FiUnlock /> : <FiLock />}
                             tooltip={isActive ? 'Inhabilitar cuenta' : 'Habilitar cuenta'} />
-                    }
-                    onClick={() => updateUserStatus(id, !isActive)} />
+                    } />
             }
         </Td>
     </Tr>

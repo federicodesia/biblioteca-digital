@@ -1,7 +1,14 @@
-import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Textarea, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
+import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { FiCheck, FiEye, FiSearch, FiX } from "react-icons/fi"
-import ImageModal from "../components/modals/image-modal"
+import ApproveUploadRequestModal from "../components/modals/approve-upload-request"
+import RejectUploadRequestModal from "../components/modals/reject-upload-request"
 import TableActionButton from "../components/table-action-button"
+import useDebounce from "../hooks/use-debounce"
+import { UploadRequest } from "../interfaces"
+import { formatDate } from "../utils/date"
+import pluralize from "../utils/pluralize"
+import useAdminStore from "../zustand/stores/admin-store"
 
 type Status = 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
 const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
@@ -10,24 +17,18 @@ const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
     'Rechazado': 'red'
 }
 
-interface UploadRequestData {
-    id: number
-    title: string
-    description: string
-    status: Status
-    requestedBy: string
-    requestedAt: string
-}
-
-const uploadRequestsData: UploadRequestData[] = [
-    { id: 0, title: 'Documento de ejemplo', description: 'Descripción de ejemplo...', status: 'Esperando respuesta', requestedBy: 'Emmanuel Pagano', requestedAt: '12 sep. 2022 15:46 p.m.' },
-    { id: 1, title: 'Documento de ejemplo', description: 'Descripción de ejemplo...', status: 'Esperando respuesta', requestedBy: 'Matías Schettino', requestedAt: '12 sep. 2022 15:46 p.m.' },
-    { id: 2, title: 'Documento de ejemplo', description: 'Descripción de ejemplo...', status: 'Aceptado', requestedBy: 'Emmanuel Pagano', requestedAt: '12 sep. 2022 15:46 p.m.' },
-    { id: 3, title: 'Documento de ejemplo', description: 'Descripción de ejemplo...', status: 'Aceptado', requestedBy: 'Emmanuel Pagano', requestedAt: '12 sep. 2022 15:46 p.m.' },
-    { id: 4, title: 'Documento de ejemplo', description: 'Descripción de ejemplo...', status: 'Rechazado', requestedBy: 'Persona infiltrada', requestedAt: '12 sep. 2022 15:46 p.m.' }
-]
-
 const UploadRequestsPage = () => {
+    const uploadRequests = useAdminStore((state) => state.uploadRequests.items)
+
+    const [searchValue, setSearchValue] = useState('')
+    const debouncedSearchValue = useDebounce(searchValue, 500)
+    const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
+
+    const searchUploadRequest = useAdminStore((state) => state.uploadRequests.search)
+    useEffect(() => {
+        searchUploadRequest(debouncedSearchValue)
+    }, [debouncedSearchValue])
+
     return <VStack align='stretch' spacing='8'>
 
         <Heading size='md' fontWeight='600'>
@@ -36,7 +37,7 @@ const UploadRequestsPage = () => {
 
         <InputGroup color='gray.600' maxW='400px'>
             <InputLeftElement pointerEvents='none' children={<FiSearch />} />
-            <Input type='text' placeholder='Buscar por título o persona...' />
+            <Input type='text' placeholder='Buscar por título o persona...' value={searchValue} onChange={handleSearch} />
         </InputGroup>
 
         <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
@@ -44,66 +45,58 @@ const UploadRequestsPage = () => {
                 <Thead>
                     <Tr>
                         <Th>Título</Th>
-                        <Th>Descripción</Th>
                         <Th textAlign='center'>Estado</Th>
                         <Th>Solicitado por</Th>
                         <Th>Fecha de solicitud</Th>
+                        <Th>Revisado por</Th>
                         <Th w='0' />
                     </Tr>
                 </Thead>
                 <Tbody>
                     {
-                        uploadRequestsData.map((item, index) => {
+                        uploadRequests.map((item, index) => {
                             return <TableItem key={`${item.id} ${index}`} {...item} />
                         })
                     }
                 </Tbody>
 
                 <TableCaption textAlign='left'>
-                    Mostrando {uploadRequestsData.length} resultados
+                    Mostrando {pluralize(uploadRequests.length, 'resultado')}
                 </TableCaption>
             </Table>
         </TableContainer>
     </VStack>
 }
 
-const TableItem = (item: UploadRequestData) => {
-    const { status } = item
+const TableItem = (item: UploadRequest) => {
+    const { document, status, requestedAt, reviewedBy } = item
+    const { title, createdBy } = document
 
     return <Tr>
-        <Td>{item.title}</Td>
-        <Td>{item.description}</Td>
+        <Td>{title}</Td>
         <Td textAlign='center'>
-            <Badge colorScheme={statusColors[status]}>
-                {status}
+            <Badge colorScheme={statusColors[status.name]}>
+                {status.name}
             </Badge>
         </Td>
-        <Td>{item.requestedBy}</Td>
-        <Td>{item.requestedAt}</Td>
+        <Td>{`${createdBy.name} ${createdBy.lastname}`}</Td>
+        <Td>{formatDate(requestedAt)}</Td>
+        <Td>{reviewedBy ? `${reviewedBy.name} ${reviewedBy.lastname}` : '-'}</Td>
 
         <Td>
             <HStack spacing='2' justify='flex-end'>
                 <TableActionButton icon={<FiEye />} tooltip='Ver detalles' />
                 {
-                    status === 'Esperando respuesta' && <>
+                    status.name === 'Esperando respuesta' && <>
 
-                        <ImageModal
-                            src='pending_approval.svg'
-                            title='Rechazar solicitud de carga'
-                            description='¿Estás seguro que quieres rechazar esta solicitud? Una vez rechazada, el documento será eliminado.'
-                            content={
-                                <Textarea resize='none' placeholder='Ingresa el motivo por el cual se rechaza' />
-                            }
-                            buttonText='Rechazar'
+                        <RejectUploadRequestModal
+                            uploadRequest={item}
                             trigger={
                                 <TableActionButton icon={<FiX />} tooltip='Rechazar solicitud' />
                             } />
 
-                        <ImageModal
-                            src='terms.svg'
-                            title='Aceptar solicitud de carga'
-                            description='¿Estás seguro que quieres aceptar esta solicitud? Una vez aceptada, el documento será visible por todos los usuarios.'
-                            buttonText='Aceptar'
+                        <ApproveUploadRequestModal
+                            uploadRequest={item}
                             trigger={
                                 <TableActionButton icon={<FiCheck />} tooltip='Aceptar solicitud' />
                             } />
