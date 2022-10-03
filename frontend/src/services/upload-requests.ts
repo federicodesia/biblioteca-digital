@@ -6,9 +6,14 @@ import { FormResponseType, ResponseType } from "./dto"
 export type CreateUploadRequestResponse = FormResponseType<UploadRequest>
 export const createUploadRequest = async (data: {
     title: string,
-    description: string
+    description: string,
+    document: Blob
 }) => {
-    return await request(() => accessTokenApi.post<CreateUploadRequestResponse>('/upload-requests', data))
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value)
+    })
+    return await request(() => accessTokenApi.post<CreateUploadRequestResponse>('/upload-requests', formData))
 }
 
 export type SearchUploadRequestResponse = ResponseType<{ uploadRequests: UploadRequest[] }>

@@ -11,7 +11,9 @@ export const createUploadRequestSchema = z.object({
 })
 
 export const uploadRequestFileSchema = z.object({
-    file: z.any({ required_error: 'Selecciona un archivo PDF' })
+    document: z.instanceof(File, { message: 'Selecciona un archivo' })
+        .refine(file => file.size <= 16 * 1024 * 1024, 'El tamaño máximo del archivo es 16MB')
+        .refine(file => file.type === 'application/pdf', 'El archivo debe ser formato .PDF')
 })
 
 export const rejectUploadRequestSchema = z.object({
