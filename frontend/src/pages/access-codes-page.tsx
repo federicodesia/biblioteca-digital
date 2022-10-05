@@ -48,7 +48,7 @@ const AccessCodesPage = () => {
             } />
         </HStack>
 
-        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+        <TableContainer p='4' rounded='lg' border='1px' borderColor='gray.200' overflowX='auto' >
             <Table colorScheme='gray' fontSize='15' >
                 <Thead>
                     <Tr>
@@ -92,7 +92,6 @@ const TableItem = (item: AccessCode) => {
     const toastId = item.code
     const toast = useToast()
 
-    const deleteAccessCode = useAdminStore((state) => state.accessCodes.delete)
     const handleCopyToClipboard = () => {
         onCopy()
         if (toast.isActive(toastId)) return

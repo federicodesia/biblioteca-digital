@@ -59,7 +59,7 @@ router.post('/', uploadPdf.single('document'), async (req, res) => {
 
     const extension = file.mimetype.split('/').at(-1)?.toLowerCase()
     const fileName = `${nanoid()}.${extension}`
-    
+
     const path = 'uploads'
     if (!fs.existsSync(path)) fs.mkdirSync(path)
     fs.writeFileSync(`${path}/${fileName}`, file.buffer)
@@ -92,9 +92,12 @@ router.post('/', uploadPdf.single('document'), async (req, res) => {
 
 router.get('/', async (req, res) => {
     const { query } = await schemaValidator(searchUploadRequestSchema, req)
-    const { q } = query
+    const { filterByUserId, q } = query
 
     const { user, userRole } = extractUser(req)
+
+    const _filterByUserId = filterByUserId ? parseInt(filterByUserId) : undefined;
+    if (_filterByUserId !== undefined && _filterByUserId !== user.id) validateRole(['Administrador'], userRole)
 
     const result = await prismaClient.uploadRequest.findMany({
         where: {
@@ -114,9 +117,13 @@ router.get('/', async (req, res) => {
                         ]
                     }
                 } : {},
-                userRole !== 'Administrador' ? {
-                    document: { createdById: user.id }
-                } : {}
+                {
+                    document: {
+                        createdById: userRole !== 'Administrador'
+                            ? user.id
+                            : _filterByUserId
+                    }
+                }
             ]
         },
         include: uploadRequestIncude,

@@ -54,7 +54,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
     return <Box
         transition='1s ease'
         bg='white'
-        rounded='2xl'
+        rounded='xl'
         h='full'
         py='2'
         shadow='rgba(149, 157, 165, 0.05) 0px 8px 24px'

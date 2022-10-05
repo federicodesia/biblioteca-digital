@@ -14,7 +14,8 @@ export const createUploadRequestSchema = z.object({
 
 export const searchUploadRequestSchema = z.object({
     query: z.object({
-        q: z.string({ required_error: 'Ingresa el texto de búsqueda' }).optional()
+        filterByUserId: z.string({ required_error: 'Ingresa el ID del usuario' }).optional(),
+        q: z.string({ required_error: 'Ingresa el texto de búsqueda' }).optional(),
     })
 })
 

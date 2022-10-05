@@ -1,8 +1,10 @@
 import { Badge, Heading, HStack, Input, InputGroup, InputLeftElement, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, ThemeTypings, Tr, VStack } from "@chakra-ui/react"
 import { ChangeEvent, useEffect, useState } from "react"
-import { FiCheck, FiEye, FiSearch, FiX } from "react-icons/fi"
+import { FiCheck, FiSearch, FiX } from "react-icons/fi"
+import { HiOutlineDocumentText } from "react-icons/hi"
 import ApproveUploadRequestModal from "../components/modals/approve-upload-request"
 import RejectUploadRequestModal from "../components/modals/reject-upload-request"
+import UploadRequestDetailModal from "../components/modals/upload-request-detail"
 import TableActionButton from "../components/table-action-button"
 import useDebounce from "../hooks/use-debounce"
 import { UploadRequest } from "../interfaces"
@@ -40,7 +42,7 @@ const UploadRequestsPage = () => {
             <Input type='text' placeholder='Buscar por título o persona...' value={searchValue} onChange={handleSearch} />
         </InputGroup>
 
-        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+        <TableContainer p='4' rounded='lg' border='1px' borderColor='gray.200' overflowX='auto' >
             <Table colorScheme='gray' fontSize='15' >
                 <Thead>
                     <Tr>
@@ -85,7 +87,13 @@ const TableItem = (item: UploadRequest) => {
 
         <Td>
             <HStack spacing='2' justify='flex-end'>
-                <TableActionButton icon={<FiEye />} tooltip='Ver detalles' />
+
+                <UploadRequestDetailModal
+                    uploadRequest={item}
+                    trigger={
+                        <TableActionButton icon={<HiOutlineDocumentText />} tooltip='Ver detalles' />
+                    } />
+
                 {
                     status.name === 'Esperando respuesta' && <>
 

@@ -33,7 +33,7 @@ const UsersPage = () => {
             <Input type='text' placeholder='Buscar por nombre, apellido o email...' value={searchValue} onChange={handleSearch} />
         </InputGroup>
 
-        <TableContainer p='4' rounded='xl' border='1px' borderColor='gray.200' overflowX='auto' >
+        <TableContainer p='4' rounded='lg' border='1px' borderColor='gray.200' overflowX='auto' >
             <Table colorScheme='gray' fontSize='15' >
                 <Thead>
                     <Tr>

@@ -46,7 +46,7 @@ const MainPage = ({ children }: MainPageProps) => {
                 <VStack flex='1' maxW='8xl' align='stretch' spacing='4'>
                     <Navbar showSidebarButton={isDownMd} onOpen={onOpen} />
 
-                    <Box flex='1' bg='white' rounded='2xl' shadow='rgba(149, 157, 165, 0.05) 0px 8px 24px' position='relative'>
+                    <Box flex='1' bg='white' rounded='xl' shadow='rgba(149, 157, 165, 0.05) 0px 8px 24px' position='relative'>
                         <Box position='absolute' top='0' left='0' right='0' bottom='0' p={{ base: '4', md: '12' }} overflowY='auto'>
                             {children}
                         </Box>

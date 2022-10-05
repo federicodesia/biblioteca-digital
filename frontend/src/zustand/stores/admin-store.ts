@@ -73,7 +73,7 @@ const useAdminStore = create<AdminState>()(
         uploadRequests: {
             items: [],
             search: async (search) => {
-                const response = await searchUploadRequest(search)
+                const response = await searchUploadRequest(search !== '' ? search : undefined)
                 if (!response.errorType) set((state) => {
                     state.uploadRequests.items = response.data.uploadRequests
                 })
