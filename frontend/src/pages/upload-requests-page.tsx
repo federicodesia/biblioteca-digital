@@ -26,9 +26,8 @@ const UploadRequestsPage = () => {
     const debouncedSearchValue = useDebounce(searchValue, 500)
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
 
-    const searchUploadRequest = useAdminStore((state) => state.uploadRequests.search)
     useEffect(() => {
-        searchUploadRequest(debouncedSearchValue)
+        useAdminStore.getState().uploadRequests.search(debouncedSearchValue)
     }, [debouncedSearchValue])
 
     return <VStack align='stretch' spacing='8'>

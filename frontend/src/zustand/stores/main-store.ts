@@ -1,7 +1,7 @@
 import { immer } from 'zustand/middleware/immer'
 import create from "zustand"
 import { UploadRequest } from "../../interfaces"
-import { createUploadRequest, CreateUploadRequestResponse, searchUploadRequest, SearchUploadRequestResponse } from '../../services/upload-requests'
+import { createUploadRequest, CreateUploadRequestResponse, fetchUploadRequests, SearchUploadRequestResponse } from '../../services/upload-requests'
 import useAuthStore from './auth-store'
 
 interface MainState {
@@ -13,14 +13,14 @@ interface MainState {
 }
 
 const useMainStore = create<MainState>()(
-    immer((set) => ({
+    immer((set, get) => ({
         uploadRequests: {
             items: [],
             fetch: async () => {
                 const { user } = useAuthStore.getState()
                 if (!user) return
 
-                const response = await searchUploadRequest(undefined, user.id)
+                const response = await fetchUploadRequests(undefined, user.id)
                 if (!response.errorType) set((state) => {
                     state.uploadRequests.items = response.data.uploadRequests
                 })
@@ -28,9 +28,7 @@ const useMainStore = create<MainState>()(
             },
             create: async (title, description, document) => {
                 const response = await createUploadRequest({ title, description, document })
-                if (!response.errorType) set((state) => {
-                    state.uploadRequests.items.push(response.data)
-                })
+                if (!response.errorType) get().uploadRequests.fetch()
                 return response
             }
         }

@@ -17,7 +17,7 @@ export const createUploadRequest = async (data: {
 }
 
 export type SearchUploadRequestResponse = ResponseType<{ uploadRequests: UploadRequest[] }>
-export const searchUploadRequest = async (search?: string, filterByUserId?: number) => {
+export const fetchUploadRequests = async (search?: string, filterByUserId?: number) => {
     return await request(() => accessTokenApi.get<SearchUploadRequestResponse>('/upload-requests', {
         params: {
             q: search,

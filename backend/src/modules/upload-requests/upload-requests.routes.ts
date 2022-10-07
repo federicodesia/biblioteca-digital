@@ -127,6 +127,11 @@ router.get('/', async (req, res) => {
             ]
         },
         include: uploadRequestIncude,
+        orderBy: [
+            { statusId: 'asc' },
+            { requestedAt: 'desc' },
+            { document: { title: 'desc' } }
+        ]
     })
 
     return res.json({

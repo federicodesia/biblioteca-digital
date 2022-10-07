@@ -23,10 +23,9 @@ const AccessCodesPage = () => {
     const [searchValue, setSearchValue] = useState('')
     const debouncedSearchValue = useDebounce(searchValue, 500)
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
-
-    const searchAccessCode = useAdminStore((state) => state.accessCodes.search)
+    
     useEffect(() => {
-        searchAccessCode(debouncedSearchValue)
+        useAdminStore.getState().accessCodes.search(debouncedSearchValue)
     }, [debouncedSearchValue])
 
     return <VStack align='stretch' spacing='8'>

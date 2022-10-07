@@ -17,9 +17,8 @@ const UsersPage = () => {
     const debouncedSearchValue = useDebounce(searchValue, 500)
     const handleSearch = (event: ChangeEvent<HTMLInputElement>) => setSearchValue(event.target.value)
 
-    const searchUser = useAdminStore((state) => state.users.search)
     useEffect(() => {
-        searchUser(debouncedSearchValue)
+        useAdminStore.getState().users.search(debouncedSearchValue)
     }, [debouncedSearchValue])
 
     return <VStack align='stretch' spacing='8'>

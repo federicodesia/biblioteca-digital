@@ -80,6 +80,11 @@ router.get('/', async (req, res) => {
             ]
         },
         include: accessCodeInclude,
+        orderBy: [
+            { roleId: 'asc' },
+            { timesUsed: 'asc' },
+            { expiresAt: 'desc' }
+        ]
     })
 
     return res.json({

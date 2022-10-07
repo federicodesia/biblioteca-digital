@@ -39,7 +39,13 @@ router.get('/', async (req, res) => {
                 { email: { contains: q } }
             ]
         } : {},
-        include: userInclude
+        include: userInclude,
+        orderBy: [
+            { role: { id: 'asc' } },
+            { isActive: 'desc' },
+            { name: 'desc' },
+            { lastname: 'desc' },
+        ]
     })
 
     return res.json({

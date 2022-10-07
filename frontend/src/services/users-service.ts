@@ -4,7 +4,7 @@ import { ResponseType } from "./dto"
 import { User } from "../interfaces"
 
 export type UsersResponse = ResponseType<{users: User[]}>
-export const searchUserRequest = async (search: string) => {
+export const fetchUsersRequest = async (search: string) => {
     return await request(() => accessTokenApi.get<UsersResponse>('/users', {
         params: search !== '' ? { q: search } : {}
     }))

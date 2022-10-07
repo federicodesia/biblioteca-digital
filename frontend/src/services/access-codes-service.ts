@@ -4,7 +4,7 @@ import { accessTokenApi } from "./api"
 import { FormResponseType, ResponseType } from "./dto"
 
 export type AccessCodesResponse = ResponseType<{ codes: AccessCode[] }>
-export const searchAccessCodeRequest = async (search: string) => {
+export const fetchAccessCodesRequest = async (search: string) => {
     return await request(() => accessTokenApi.get<AccessCodesResponse>('/access-codes', {
         params: search !== '' ? { q: search } : {}
     }))
