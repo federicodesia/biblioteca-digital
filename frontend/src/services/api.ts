@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import useAuthStore from "../zustand/stores/auth-store";
 import { accessTokenRequest } from "./auth-service";
 
-const baseURL = 'http://localhost:3000/'
+export const baseURL = 'http://localhost:3000/'
 
 export const api = axios.create({ baseURL: baseURL })
 export const refreshTokenApi = axios.create({ baseURL: baseURL })

@@ -75,7 +75,7 @@ const TableItem = (item: UploadRequest) => {
     const { title, createdBy } = document
 
     return <Tr>
-        <Td>{title}</Td>
+        <Td maxW='250px' whiteSpace='nowrap' overflow='hidden' textOverflow='ellipsis'>{title}</Td>
         <Td textAlign='center'>
             <Badge colorScheme={statusColors[status.name]}>
                 {status.name}

@@ -1,6 +1,7 @@
-import { Box, HStack, Modal, ModalContent, ModalOverlay, useDisclosure, VStack, Text, Badge, ThemeTypings, Button, Flex } from "@chakra-ui/react"
+import { Box, HStack, Modal, ModalContent, ModalOverlay, useDisclosure, VStack, Text, Badge, ThemeTypings, Button, Flex, ModalCloseButton } from "@chakra-ui/react"
 import { ReactNode } from "react"
 import { UploadRequest } from "../../interfaces"
+import uploadsService from "../../services/uploads-service"
 import { formatDate } from "../../utils/date"
 
 type Status = 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
@@ -19,7 +20,7 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { id, document, requestedAt, status, review, reviewedAt, reviewedBy } = uploadRequest
-    const { title, description } = document
+    const { title, description, fileName } = document
 
     return <>
         <Box onClick={onOpen}>
@@ -30,6 +31,8 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
             <ModalOverlay />
 
             <ModalContent rounded='xl' m='4' p='8'>
+                <ModalCloseButton top='3' />
+
                 <VStack align='start' spacing='6' pb='2'>
                     <Text fontSize='lg' fontWeight='bold' textAlign='center'>
                         {`Solicitud de carga #${id}`}
@@ -47,7 +50,11 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
                                     <Text>{description} </Text>
                                 </VStack>
 
-                                <Button variant='outline'>Descargar documento</Button>
+                                {
+                                    fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
+                                        <Button w='full' variant='outline'>Descargar documento</Button>
+                                    </a>
+                                }
                             </VStack>
                         </Flex>
                     </VStack>

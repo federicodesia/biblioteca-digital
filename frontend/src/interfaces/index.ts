@@ -51,6 +51,7 @@ export interface Document {
         lastname: string
     }
     publishedAt?: string
+    fileName?: string
 }
 
 export interface UploadRequest {
