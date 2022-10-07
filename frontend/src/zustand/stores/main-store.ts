@@ -1,14 +1,19 @@
 import { immer } from 'zustand/middleware/immer'
 import create from "zustand"
-import { UploadRequest } from "../../interfaces"
-import { createUploadRequest, CreateUploadRequestResponse, fetchUploadRequests, SearchUploadRequestResponse } from '../../services/upload-requests'
+import { DocumentData, UploadRequest } from "../../interfaces"
+import { createUploadRequest, CreateUploadRequestResponse, fetchUploadRequests, UploadRequestResponse } from '../../services/upload-requests'
 import useAuthStore from './auth-store'
+import { DocumentsResponse, fetchDocuments } from '../../services/documents-service'
 
 interface MainState {
     uploadRequests: {
         items: UploadRequest[],
-        fetch: () => Promise<SearchUploadRequestResponse | undefined>,
+        fetch: () => Promise<UploadRequestResponse | undefined>,
         create: (title: string, description: string, document: Blob) => Promise<CreateUploadRequestResponse>
+    },
+    documents: {
+        items: DocumentData[]
+        fetch: () => Promise<DocumentsResponse | undefined>,
     }
 }
 
@@ -22,7 +27,8 @@ const useMainStore = create<MainState>()(
 
                 const response = await fetchUploadRequests(undefined, user.id)
                 if (!response.errorType) set((state) => {
-                    state.uploadRequests.items = response.data.uploadRequests
+                    const items = response.data.uploadRequests.filter(u => u.status.name !== 'Aceptado')
+                    state.uploadRequests.items = items
                 })
                 return response
             },
@@ -31,6 +37,19 @@ const useMainStore = create<MainState>()(
                 if (!response.errorType) get().uploadRequests.fetch()
                 return response
             }
+        },
+        documents: {
+            items: [],
+            fetch: async () => {
+                const { user } = useAuthStore.getState()
+                if (!user) return
+
+                const response = await fetchDocuments(undefined, user.id)
+                if (!response.errorType) set((state) => {
+                    state.documents.items = response.data.documents
+                })
+                return response
+            },
         }
     }))
 )

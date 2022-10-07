@@ -42,7 +42,6 @@ router.get('/', async (req, res) => {
         include: userInclude,
         orderBy: [
             { role: { id: 'asc' } },
-            { isActive: 'desc' },
             { name: 'desc' },
             { lastname: 'desc' },
         ]

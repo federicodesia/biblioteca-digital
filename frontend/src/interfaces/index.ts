@@ -41,7 +41,7 @@ export interface UserSession {
     accessToken: string
 }
 
-export interface Document {
+export interface DocumentData {
     id: number
     title: string
     description: string
@@ -56,7 +56,7 @@ export interface Document {
 
 export interface UploadRequest {
     id: number
-    document: Document
+    document: DocumentData
     requestedAt: string
     status: {
         id: number
