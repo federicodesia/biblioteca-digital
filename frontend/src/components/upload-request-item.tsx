@@ -1,22 +1,21 @@
 import { AspectRatio, Box, VStack, Text } from "@chakra-ui/react"
 import { UploadRequest } from "../interfaces"
+import DocumentCard from "./document-card"
 import UploadRequestDetailModal from "./modals/upload-request-detail"
 
 interface Props {
     uploadRequest: UploadRequest
 }
 
-const UplaodRequestCard = ({ uploadRequest }: Props) => {
+const UplaodRequestItem = ({ uploadRequest }: Props) => {
     const { document, status } = uploadRequest
-    const { title } = document
+    const { title, fileName } = document
 
     return <VStack spacing='5' w='150px' align='stretch'>
         <UploadRequestDetailModal
             uploadRequest={uploadRequest}
             trigger={
-                <AspectRatio w='full' ratio={3 / 4} cursor='pointer'>
-                    <Box bg='gray.200' rounded='lg' />
-                </AspectRatio>
+                <DocumentCard fileName={fileName} cursor='pointer' />
             } />
 
         <VStack fontSize='sm' align='start' spacing='1' whiteSpace='nowrap' >
@@ -26,4 +25,4 @@ const UplaodRequestCard = ({ uploadRequest }: Props) => {
     </VStack>
 }
 
-export default UplaodRequestCard
+export default UplaodRequestItem

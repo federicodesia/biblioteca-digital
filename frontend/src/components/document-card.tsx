@@ -1,30 +1,21 @@
-import { Box, VStack, Text, HStack } from "@chakra-ui/react"
-import { DocumentData } from "../interfaces"
-import { formatDate } from "../utils/date"
+import { Image, ImageProps } from "@chakra-ui/react"
+import uploadsService from "../services/uploads-service"
 
-interface Props {
-    document: DocumentData
+interface Props extends ImageProps {
+    fileName?: string
 }
 
-const DocumentCard = ({ document }: Props) => {
-    const { id, title, description, createdBy, publishedAt } = document
-    const { name, lastname } = createdBy
-
-    return <HStack align='stretch' spacing='8'>
-        <Box h='200px' w='150px' bg='gray.200' rounded='lg' />
-
-        <VStack flex='1' align='start' justify='space-between' py='2' spacing='8'>
-            <VStack align='start' maxW='3xl'>
-                <Text fontWeight='semibold'>{title}</Text>
-                <Text>{description}</Text>
-            </VStack>
-
-            <VStack align='start' spacing='1'>
-                <Text>{`Creado por: ${name} ${lastname}`}</Text>
-                <Text>{`Publicado el: ${publishedAt ? formatDate(publishedAt) : '-'}`}</Text>
-            </VStack>
-        </VStack>
-    </HStack>
+const DocumentCard = ({ fileName, ...rest }: Props) => {
+    return <Image
+        h='200px'
+        w='150px'
+        bg='gray.200'
+        rounded='lg'
+        borderStyle='solid'
+        borderWidth='1px'
+        borderColor='gray.200'
+        src={fileName ? uploadsService.getPreview(fileName) : undefined}
+        {...rest} />
 }
 
 export default DocumentCard

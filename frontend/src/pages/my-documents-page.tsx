@@ -1,9 +1,9 @@
 import { Button, Heading, VStack, HStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import DocumentCard from '../components/document-card';
+import DocumentItem from '../components/document-item';
 import CreateUploadRequestModal from '../components/modals/create-upload-request';
-import UplaodRequestCard from '../components/upload-request-card';
+import UplaodRequestItem from '../components/upload-request-item';
 import useMainStore from '../zustand/stores/main-store';
 
 const MyDocumentsPage = () => {
@@ -37,7 +37,7 @@ const MyDocumentsPage = () => {
         <HStack spacing='8'>
           {
             uploadRequests.map((item, index) => {
-              return <UplaodRequestCard
+              return <UplaodRequestItem
                 key={`${item.id} ${index}`}
                 uploadRequest={item} />
             })
@@ -62,7 +62,7 @@ const MyDocumentsPage = () => {
       <VStack align='start' spacing='10'>
         {
           documents.map((item, index) => {
-            return <DocumentCard
+            return <DocumentItem
               key={`${item.id} ${index}`}
               document={item} />
           })

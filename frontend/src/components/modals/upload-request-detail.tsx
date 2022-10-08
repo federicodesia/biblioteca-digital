@@ -3,6 +3,7 @@ import { ReactNode } from "react"
 import { UploadRequest } from "../../interfaces"
 import uploadsService from "../../services/uploads-service"
 import { formatDate } from "../../utils/date"
+import DocumentCard from "../document-card"
 
 type Status = 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
 const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
@@ -42,7 +43,7 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
                         <Text fontWeight='semibold'>Documento</Text>
 
                         <Flex gap='6'>
-                            <Box w='150px' h='200px' bg='gray.200' rounded='lg' />
+                            <DocumentCard fileName={fileName} />
 
                             <VStack flex='1' minH='200px' align='stretch' justify='space-between' spacing='6'>
                                 <VStack align='start'>
@@ -52,7 +53,7 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
 
                                 {
                                     fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
-                                        <Button w='full' variant='outline'>Descargar documento</Button>
+                                        <Button w='full' variant='outline'>Ver documento</Button>
                                     </a>
                                 }
                             </VStack>

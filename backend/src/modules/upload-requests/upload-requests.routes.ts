@@ -12,6 +12,7 @@ import { validateRole } from "../../utils/validate-role"
 import { answerUploadRequestSchema, createUploadRequestSchema, searchUploadRequestSchema } from "./upload-requests.schemas"
 import fs from "fs"
 import { customAlphabet } from "nanoid"
+import { getPdfPreview } from "../../utils/pdf-preview"
 
 const router = Router()
 router.use(authGuardAccessToken)
@@ -56,13 +57,24 @@ router.post('/', uploadPdf.single('document'), async (req, res) => {
 
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
     const nanoid = customAlphabet(alphabet, 32)
+    const fileName = nanoid()
 
-    const extension = file.mimetype.split('/').at(-1)?.toLowerCase()
-    const fileName = `${nanoid()}.${extension}`
+    const doc = {
+        dir: 'uploads/documents',
+        path: `uploads/documents/${fileName}.pdf`
+    }
 
-    const path = 'uploads'
-    if (!fs.existsSync(path)) fs.mkdirSync(path)
-    fs.writeFileSync(`${path}/${fileName}`, file.buffer)
+    if (!fs.existsSync(doc.dir)) fs.mkdirSync(doc.dir, { recursive: true })
+    fs.writeFileSync(doc.path, file.buffer)
+
+    const preview = {
+        dir: 'uploads/previews',
+        path: `uploads/previews/${fileName}.png`
+    }
+
+    const previewBuffer = await getPdfPreview(file.buffer)
+    if (!fs.existsSync(preview.dir)) fs.mkdirSync(preview.dir, { recursive: true })
+    fs.writeFileSync(preview.path, previewBuffer)
 
     const document = await prismaClient.document.create({
         data: {
