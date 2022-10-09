@@ -10,9 +10,10 @@ router.use(authGuardAccessToken)
 
 router.get('/', async (req, res) => {
     const { query } = await schemaValidator(searchDocumentSchema, req)
-    const { q, filterByUserId } = query
+    const { q, filterByUserId, orderBy, limit } = query
 
     const result = await prismaClient.document.findMany({
+        take: limit ? parseInt(limit) : undefined,
         where: {
             AND: [
                 q !== undefined ? {
@@ -40,6 +41,7 @@ router.get('/', async (req, res) => {
             ]
         },
         include: documentInclude,
+        orderBy: orderBy === 'publishedAt' ? { publishedAt: 'desc' } : undefined
     })
 
     return res.json({

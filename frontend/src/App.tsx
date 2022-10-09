@@ -5,6 +5,7 @@ import RegisterForm from "./components/forms/register-form"
 import VerificationForm from "./components/forms/verification-form"
 import ProtectedRoute from "./components/protected-route"
 import AccessCodesPage from "./pages/access-codes-page"
+import HomePage from "./pages/home-page"
 import MainPage from "./pages/main-page"
 import MyDocumentsPage from "./pages/my-documents-page"
 import UploadRequestsPage from "./pages/upload-requests-page"
@@ -29,7 +30,7 @@ function App() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/home" element={<MainPage />} />
+        <Route path="/home" element={<MainPage children={<HomePage />} />} />
         <Route path="/my-documents" element={<MainPage children={<MyDocumentsPage />} />} />
       </Route>
 

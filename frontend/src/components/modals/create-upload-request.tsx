@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react"
 import { useForm, UseFormReturn } from "react-hook-form"
 import { createUploadRequestSchema, uploadRequestFileSchema } from "../../schemas/upload-requests.schema"
 import setFormError from "../../utils/form-error"
-import useMainStore from "../../zustand/stores/main-store"
+import useUserStore from "../../zustand/stores/user-store"
 import EmptySpace from "../empty-space"
 import FileDropzone from "../file-dropzone"
 
@@ -116,7 +116,7 @@ const UploadFileForm = ({ previousForm, onPrevious, onClose }: UploadFileFormPro
         trigger
     } = useForm<UploadFileFormValues>({ resolver: zodResolver(uploadRequestFileSchema) })
 
-    const createUploadRequest = useMainStore((state) => state.uploadRequests.create)
+    const createUploadRequest = useUserStore((state) => state.uploadRequests.create)
     const onSubmit = handleSubmit(async (data) => {
         const document = data.document
         if (!document) return
