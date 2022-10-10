@@ -1,5 +1,6 @@
-import { Box, Heading, Image, VStack } from '@chakra-ui/react';
+import { Box, Heading, Image, SimpleGrid, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
+import CategoryCard from '../components/category-card';
 import DocumentItem from '../components/document-item';
 import FeaturedDocument from '../components/featured-document';
 import uploadsService from '../services/uploads-service';
@@ -7,7 +8,8 @@ import useMainStore from '../zustand/stores/main-store';
 
 const HomePage = () => {
 
-  const { latestDocuments } = useMainStore((state) => ({
+  const { categories, latestDocuments } = useMainStore((state) => ({
+    categories: state.categories.items,
     latestDocuments: state.documents.latest
   }))
 
@@ -38,6 +40,20 @@ const HomePage = () => {
           })
         }
       </VStack>
+    </VStack>
+
+    <VStack align='stretch' spacing='8'>
+      <Heading size='md' fontWeight='600'>Categorías</Heading>
+
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing='4' >
+        {
+          categories.map((category, index) => {
+            return <CategoryCard
+              key={`${category.name} ${index}`}
+              category={category} />
+          })
+        }
+      </SimpleGrid>
     </VStack>
   </VStack>
 }

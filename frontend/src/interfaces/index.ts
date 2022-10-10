@@ -41,6 +41,12 @@ export interface UserSession {
     accessToken: string
 }
 
+export interface Category {
+    id: number
+    name: string
+    image: string
+}
+
 export interface DocumentData {
     id: number
     title: string

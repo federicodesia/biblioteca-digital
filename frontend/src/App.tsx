@@ -13,11 +13,13 @@ import UsersPage from "./pages/users-page"
 import WelcomePage from "./pages/welcome-page"
 import { accessTokenRequest } from "./services/auth-service"
 import useAuthStore from "./zustand/stores/auth-store"
+import useMainStore from "./zustand/stores/main-store"
 
 function App() {
 
   useEffect(() => {
     if (useAuthStore.getState().userSession) accessTokenRequest()
+    useMainStore.getState().categories.fetch()
   }, [])
 
   return (

@@ -5,6 +5,7 @@ import "express-async-errors";
 import errorHandler from "./middleware/error-handler";
 import accessCodesRoutes from "./modules/access-codes/access-codes.routes";
 import authRoutes from "./modules/auth/auth.routes";
+import categoriesRoutes from "./modules/categories/categories.routes";
 import documentsRoutes from "./modules/documents/documents.routes";
 import uploadRequestsRoutes from "./modules/upload-requests/upload-requests.routes";
 import uploadsRoutes from "./modules/uploads/uploads.routes";
@@ -22,6 +23,7 @@ app.use('/auth', authRoutes)
 app.use('/users', usersRoutes)
 app.use('/access-codes', accessCodesRoutes)
 app.use('/upload-requests', uploadRequestsRoutes)
+app.use('/categories', categoriesRoutes)
 app.use('/documents', documentsRoutes)
 app.use('/uploads', uploadsRoutes)
 

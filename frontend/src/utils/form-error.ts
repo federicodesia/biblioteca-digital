@@ -1,5 +1,5 @@
 import { UseFormSetError } from "react-hook-form"
-import { FormError } from "../services/auth-service/dto"
+import { FormError } from "../services/dto"
 
 const setFormError = (
     formError: FormError[],

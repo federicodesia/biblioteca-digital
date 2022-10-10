@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { roles } from '../src/types';
+import { categories, roles } from '../src/types';
 
 import * as bcrypt from "bcrypt";
 
@@ -32,6 +32,13 @@ async function seed() {
             { name: 'Aceptado' },
             { name: 'Rechazado' }
         ]
+    })
+
+    await prisma.category.createMany({
+        data: categories.map(category => ({
+            name: category,
+            image: category
+        }))
     })
 }
 

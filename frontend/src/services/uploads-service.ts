@@ -8,9 +8,14 @@ const getPreview = (fileName: string) => {
     return `${baseURL}uploads/previews/${fileName}.png`
 }
 
+const getCategoryImage = (image: string) => {
+    return `${baseURL}uploads/category/${image}.png`
+}
+
 const uploadsService = {
     getDocument,
-    getPreview
+    getPreview,
+    getCategoryImage
 }
 
 export default uploadsService

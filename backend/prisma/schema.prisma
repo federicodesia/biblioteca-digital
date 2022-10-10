@@ -63,6 +63,14 @@ model Document {
   publishedAt   DateTime?
   fileName      String?        @db.VarChar(64)
   UploadRequest UploadRequest?
+  categories    Category[]
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique @db.VarChar(64)
+  image     String     @db.VarChar(64)
+  documents Document[]
 }
 
 model UploadRequestState {
