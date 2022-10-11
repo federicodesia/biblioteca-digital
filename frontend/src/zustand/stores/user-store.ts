@@ -9,7 +9,7 @@ interface UserState {
     uploadRequests: {
         items: UploadRequest[],
         fetch: () => Promise<UploadRequestResponse | undefined>,
-        create: (title: string, description: string, document: Blob) => Promise<CreateUploadRequestResponse>
+        create: (title: string, description: string, document: Blob, categories: string[]) => Promise<CreateUploadRequestResponse>
     },
     documents: {
         items: DocumentData[]
@@ -32,8 +32,8 @@ const useUserStore = create<UserState>()(
                 })
                 return response
             },
-            create: async (title, description, document) => {
-                const response = await createUploadRequest({ title, description, document })
+            create: async (title, description, document, categories) => {
+                const response = await createUploadRequest({ title, description, document, categories: categories.join(',') })
                 if (!response.errorType) get().uploadRequests.fetch()
                 return response
             }

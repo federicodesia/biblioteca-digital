@@ -7,7 +7,8 @@ export type CreateUploadRequestResponse = FormResponseType<UploadRequest>
 export const createUploadRequest = async (data: {
     title: string,
     description: string,
-    document: Blob
+    document: Blob,
+    categories: string
 }) => {
     const formData = new FormData()
     Object.entries(data).forEach(([key, value]) => {

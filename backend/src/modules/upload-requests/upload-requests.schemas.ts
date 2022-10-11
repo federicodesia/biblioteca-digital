@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { categories } from "../../types";
 
 export const createUploadRequestSchema = z.object({
     body: z.object({
@@ -8,7 +9,20 @@ export const createUploadRequestSchema = z.object({
 
         description: z.string({ required_error: 'Ingresa la descripción del documento' })
             .min(32, { message: 'Debe contener 32 caracteres como mínimo' })
-            .max(256, { message: 'Debe contener 256 caracteres como máximo' })
+            .max(256, { message: 'Debe contener 256 caracteres como máximo' }),
+
+        categories: z.string({ required_error: 'Selecciona las categorías del documento' })
+            .refine(
+                s => {
+                    const array = s.split(',')
+                    return array.every(c => categories.includes(c))
+                },
+                { message: 'Las categorías no son válidas' }
+            )
+            .refine(
+                s => s.split(',').length < 3,
+                { message: 'Puedes seleccionar 3 categorías como máximo' }
+            )
     })
 })
 

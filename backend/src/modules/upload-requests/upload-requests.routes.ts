@@ -34,7 +34,7 @@ const uploadPdf = multer({
 
 router.post('/', uploadPdf.single('document'), async (req, res) => {
     const { body } = await schemaValidator(createUploadRequestSchema, req)
-    const { title, description } = body
+    const { title, description, categories } = body
 
     const { user } = extractUser(req)
     const verify = await prismaClient.uploadRequest.findMany({
@@ -83,7 +83,12 @@ router.post('/', uploadPdf.single('document'), async (req, res) => {
             createdBy: {
                 connect: { id: user.id }
             },
-            fileName: fileName
+            fileName: fileName,
+            categories: {
+                connect: categories.split(',').map(name => ({
+                    name: name
+                }))
+            }
         }
     })
 
