@@ -16,6 +16,10 @@ interface MainState {
             items: DocumentData[],
             fetch: () => void
         }
+        mostDownloaded: {
+            items: DocumentData[],
+            fetch: () => void
+        }
     }
 }
 
@@ -40,9 +44,18 @@ const useMainStore = create<MainState>()(
             latest: {
                 items: [],
                 fetch: async () => {
-                    const response = await fetchDocuments({ orderBy: 'publishedAt', limit: 5 })
+                    const response = await fetchDocuments({ orderBy: 'publishedAt', limit: 3 })
                     if (!response.errorType) set((state) => {
                         state.documents.latest.items = response.data.documents
+                    })
+                },
+            },
+            mostDownloaded: {
+                items: [],
+                fetch: async () => {
+                    const response = await fetchDocuments({ orderBy: 'downloads', limit: 4 })
+                    if (!response.errorType) set((state) => {
+                        state.documents.mostDownloaded.items = response.data.documents
                     })
                 },
             }

@@ -7,16 +7,19 @@ import useMainStore from '../zustand/stores/main-store';
 
 const HomePage = () => {
 
-  const { categories, latestDocuments } = useMainStore((state) => ({
-    categories: state.categories.items,
-    latestDocuments: state.documents.latest
+  const { categories, latestDocuments, mostDownloaded } = useMainStore((state) => ({
+    categories: state.categories,
+    latestDocuments: state.documents.latest,
+    mostDownloaded: state.documents.mostDownloaded
   }))
 
   useEffect(() => {
+    categories.fetch()
     latestDocuments.fetch()
+    mostDownloaded.fetch()
   }, [])
 
-  const featuredDocument = latestDocuments.items.at(0)
+  const featuredDocument = mostDownloaded.items.at(1)
 
   return <VStack align='stretch' spacing='12'>
 
@@ -34,7 +37,7 @@ const HomePage = () => {
         {
           latestDocuments.items.map((item, index) => {
             return <DocumentItem
-              key={`${item.id} ${index}`}
+              key={`LatestDocument ${item.id} ${index}`}
               document={item} />
           })
         }
@@ -46,9 +49,9 @@ const HomePage = () => {
 
       <SimpleGrid columns={{ base: 1, sm: 2, lg: 3, xl: 4 }} spacing='4' >
         {
-          categories.map((category, index) => {
+          categories.items.map((category, index) => {
             return <CategoryCard
-              key={`${category.name} ${index}`}
+              key={`Category ${category.name} ${index}`}
               category={category} />
           })
         }

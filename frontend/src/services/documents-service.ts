@@ -9,7 +9,7 @@ export type FetchDocumentsProps = {
     q?: string,
     filterByUserId?: number
     filterByCategoryId?: number
-    orderBy?: 'publishedAt'
+    orderBy?: 'publishedAt' | 'downloads'
     limit?: number
 }
 

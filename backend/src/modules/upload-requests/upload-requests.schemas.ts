@@ -23,6 +23,10 @@ export const createUploadRequestSchema = z.object({
                 s => s.split(',').length < 3,
                 { message: 'Puedes seleccionar 3 categorías como máximo' }
             )
+            .refine(
+                s => s.split(',').length > 0,
+                { message: 'Debes seleccionar 1 categoría como mínimo' }
+            )
     })
 })
 

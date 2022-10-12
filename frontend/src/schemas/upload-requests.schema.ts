@@ -14,7 +14,12 @@ export const createUploadRequestSchema = z.object({
             const parsed = obj as { [key: string]: boolean }
             const values = Object.values(parsed)
             return values.filter(v => v === true).length <= 3
-        }, 'No puedes seleccionar más de 3 categorías'),
+        }, 'No puedes seleccionar más de 3 categorías')
+        .refine(obj => {
+            const parsed = obj as { [key: string]: boolean }
+            const values = Object.values(parsed)
+            return values.filter(v => v === true).length > 0
+        }, 'Debes seleccionar 1 categoría como mínimo'),
 
     document: z.instanceof(File, { message: 'Selecciona un archivo' })
         .refine(file => file.size <= 16 * 1024 * 1024, 'El tamaño máximo del archivo es 16MB')

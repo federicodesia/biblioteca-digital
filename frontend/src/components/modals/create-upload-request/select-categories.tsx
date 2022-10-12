@@ -1,4 +1,5 @@
 import { Button, Checkbox, FormControl, FormErrorMessage, HStack, SimpleGrid, VStack } from "@chakra-ui/react"
+import { useEffect } from "react"
 import { Controller, UseFormReturn } from "react-hook-form"
 import { CreateUploadRequestFormValues } from "."
 import useMainStore from "../../../zustand/stores/main-store"
@@ -14,6 +15,9 @@ const SelectCategoriesForm = ({ form, onPrevious, onSubmit }: Props) => {
     const { formState: { errors }, control, getFieldState } = form
 
     const categories = useMainStore((state) => state.categories.items)
+    useEffect(() => {
+        useMainStore.getState().categories.fetch()
+    }, [])
 
     return <VStack spacing={10} p={6} pt={12} align='stretch'>
         <EmptySpace
