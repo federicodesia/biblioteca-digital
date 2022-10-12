@@ -20,10 +20,12 @@ const CategoryResultsPage = () => {
 
         const categoryResponse = await useMainStore.getState().categories.get(parsedId)
         if (categoryResponse.errorType) return navigate('/home')
-        setCategory(categoryResponse.data)
+
+        const category = categoryResponse.data
+        setCategory(category)
 
         const reuslt = await useMainStore.getState().documents.fetch({
-            filterByCategoryId: category?.id
+            filterByCategoryId: category.id
         })
         setResult(reuslt)
     }

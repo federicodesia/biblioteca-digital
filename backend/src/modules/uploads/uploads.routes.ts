@@ -4,6 +4,7 @@ import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
 import { getUploadSchema } from "./uploads.schemas"
 import fs from "fs"
+import { prismaClient } from "../.."
 
 const router = Router()
 
@@ -29,6 +30,18 @@ const getFile = ({ res, path, contentType, notFound }: {
 router.get('/documents/:fileName', async (req, res) => {
     const { params } = await schemaValidator(getUploadSchema, req)
     const { fileName } = params
+
+    const document = await prismaClient.document.findFirst({
+        where: { fileName: fileName.split('.').at(0) }
+    })
+
+    if (document) {
+        const updated = await prismaClient.document.update({
+            where: { id: document.id },
+            data: { downloads: { increment: 1 } }
+        })
+    }
+
     return await getFile({
         res,
         path: `uploads/documents/${fileName}`,

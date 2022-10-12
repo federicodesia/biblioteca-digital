@@ -62,6 +62,7 @@ export interface DocumentData {
     }[]
     publishedAt?: string
     fileName?: string
+    downloads: number
 }
 
 export interface UploadRequest {

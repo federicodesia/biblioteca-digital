@@ -62,6 +62,7 @@ model Document {
   createdById   Int
   publishedAt   DateTime?
   fileName      String?        @db.VarChar(64)
+  downloads     Int            @default(0)
   UploadRequest UploadRequest?
   categories    Category[]
 }

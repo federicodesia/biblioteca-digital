@@ -1,6 +1,7 @@
 import { VStack, Text, HStack, Flex } from "@chakra-ui/react"
-import { HiOutlineTag } from "react-icons/hi";
+import { HiOutlineDownload, HiOutlineTag } from "react-icons/hi";
 import { DocumentData } from "../interfaces"
+import pluralize from "../utils/pluralize";
 import DocumentCard from "./document-card";
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 }
 
 const DocumentItem = ({ document, type }: Props) => {
-    const { title, description, createdBy, fileName, categories } = document
+    const { title, description, createdBy, fileName, categories, downloads } = document
     const { name, lastname } = createdBy
 
     return <HStack align='stretch' spacing='8'>
@@ -36,8 +37,15 @@ const DocumentItem = ({ document, type }: Props) => {
                 <Text noOfLines={1} >{`Publicado por: ${name} ${lastname}`}</Text>
 
                 <Flex columnGap='4' rowGap='1' flexWrap={type === 'featured' ? undefined : 'wrap'}>
+                    <HStack flexShrink={0}>
+                        <HiOutlineDownload />
+                        <Text noOfLines={1}>
+                            {pluralize(downloads, 'descarga')}
+                        </Text>
+                    </HStack>
+
                     {
-                        categories.length > 0 && <HStack spacing='1' flexShrink={0}>
+                        categories.length > 0 && <HStack flexShrink={0}>
                             <HiOutlineTag />
                             <Text noOfLines={1}>
                                 {categories.map(c => c.name).join(', ')}

@@ -52,14 +52,15 @@ const FileDropzone = ({ isValid = true, accept, onChange }: Props) => {
                     isDragActive
                         ? <Text
                             fontWeight='500'
-                            color='teal.500'>
+                            color='teal.500'
+                            textAlign='center'>
                             Suelta el archivo para subirlo
                         </Text>
                         : acceptedFile
-                            ? <Text fontWeight='500' color='teal.500'>
+                            ? <Text fontWeight='500' color='teal.500' textAlign='center'>
                                 Documento cargado correctamente
                             </Text>
-                            : <Text>
+                            : <Text textAlign='center'>
                                 <Text
                                     as='span'
                                     color={isValid ? 'teal.500' : 'red.500'}
