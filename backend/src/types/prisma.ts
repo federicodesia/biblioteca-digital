@@ -9,6 +9,12 @@ export const userSelect: Prisma.UserSelect = {
 export const documentInclude: Prisma.DocumentInclude = {
     createdBy: {
         select: userSelect
+    },
+    categories: {
+        select: {
+            id: true,
+            name: true
+        }
     }
 }
 

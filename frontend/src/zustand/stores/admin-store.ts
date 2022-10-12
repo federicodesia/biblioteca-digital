@@ -3,7 +3,7 @@ import create from "zustand"
 import { AccessCode, RoleType, UploadRequest, User } from "../../interfaces"
 import { AccessCodesResponse, createAccessCodeRequest, CreateAccessCodeResponse, deleteAccessCodeRequest, DeleteAccessCodeResponse, fetchAccessCodesRequest } from "../../services/access-codes-service"
 import { fetchUsersRequest, updateUserStatusRequest, UsersResponse, UserStatusResponse } from "../../services/users-service"
-import { answerUploadRequest, AnswerUploadRequestResponse, fetchUploadRequests, SearchUploadRequestResponse } from '../../services/upload-requests'
+import { answerUploadRequest, AnswerUploadRequestResponse, fetchUploadRequests, UploadRequestResponse } from '../../services/upload-requests'
 
 interface AdminState {
     users: {
@@ -30,7 +30,7 @@ interface AdminState {
         filters: {
             search: string
         },
-        fetch: () => Promise<SearchUploadRequestResponse>
+        fetch: () => Promise<UploadRequestResponse>
         search: (search: string) => void
         answer: (documentId: number, approved: boolean, review?: string) => Promise<AnswerUploadRequestResponse>
     }

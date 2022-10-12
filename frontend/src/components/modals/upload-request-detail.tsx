@@ -1,5 +1,6 @@
 import { Box, HStack, Modal, ModalContent, ModalOverlay, useDisclosure, VStack, Text, Badge, ThemeTypings, Button, Flex, ModalCloseButton } from "@chakra-ui/react"
 import { ReactNode } from "react"
+import { HiOutlineTag } from "react-icons/hi"
 import { UploadRequest } from "../../interfaces"
 import uploadsService from "../../services/uploads-service"
 import { formatDate } from "../../utils/date"
@@ -20,8 +21,8 @@ interface Props {
 const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const { id, document, requestedAt, status, review, reviewedAt, reviewedBy } = uploadRequest
-    const { title, description, fileName } = document
+    const { id, document, requestedAt, status, review, reviewedAt } = uploadRequest
+    const { title, description, fileName, categories } = document
 
     return <>
         <Box onClick={onOpen}>
@@ -45,17 +46,27 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
                         <Flex gap='6'>
                             <DocumentCard fileName={fileName} />
 
-                            <VStack flex='1' minH='200px' align='stretch' justify='space-between' spacing='6'>
+                            <VStack flex='1' minH='200px' align='stretch' justify='space-between' spacing='6' wordBreak='break-word'>
                                 <VStack align='start'>
                                     <Text fontWeight='semibold'>{title}</Text>
                                     <Text>{description} </Text>
                                 </VStack>
 
-                                {
-                                    fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
-                                        <Button w='full' variant='outline'>Ver documento</Button>
-                                    </a>
-                                }
+                                <VStack align='stretch' spacing='4'>
+                                    {
+                                        categories.length > 0 && <HStack spacing='1' flexShrink={0}>
+                                            <HiOutlineTag />
+                                            <Text noOfLines={1}>
+                                                {categories.map(c => c.name).join(', ')}
+                                            </Text>
+                                        </HStack>
+                                    }
+                                    {
+                                        fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
+                                            <Button w='full' variant='outline'>Ver documento</Button>
+                                        </a>
+                                    }
+                                </VStack>
                             </VStack>
                         </Flex>
                     </VStack>
@@ -78,7 +89,14 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
                             </HStack>
 
                             {
-                                status.name === 'Rechazado' && <Text>{`Descripción: ${review ?? 'No se incluyó un motivo'}`} </Text>
+                                status.name === 'Rechazado' && <Text>
+                                    {
+                                        `Descripción: ${review !== undefined && review.length > 0
+                                            ? review
+                                            : 'No se incluyó un motivo'
+                                        }`
+                                    }
+                                </Text>
                             }
                         </VStack>
                     </VStack>

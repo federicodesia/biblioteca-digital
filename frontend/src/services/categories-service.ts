@@ -7,3 +7,8 @@ export type CategoriesResponse = ResponseType<{ categories: Category[] }>
 export const fetchCategories = async () => {
     return await request(() => accessTokenApi.get<CategoriesResponse>('/categories'))
 }
+
+export type GetCategoryResponse = ResponseType<Category>
+export const getCategory = async (id: number) => {
+    return await request(() => accessTokenApi.get<GetCategoryResponse>(`/categories/${id}`))
+}

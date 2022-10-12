@@ -1,21 +1,15 @@
 import { baseURL } from "./api"
 
-const getDocument = (fileName: string) => {
-    return `${baseURL}uploads/documents/${fileName}.pdf`
-}
-
-const getPreview = (fileName: string) => {
-    return `${baseURL}uploads/previews/${fileName}.png`
-}
-
-const getCategoryImage = (image: string) => {
-    return `${baseURL}uploads/category/${image}.png`
-}
+const getDocument = (fileName: string) => `${baseURL}uploads/documents/${fileName}.pdf`
+const getPreview = (fileName: string) => `${baseURL}uploads/previews/${fileName}.png`
+const getCategoryCardImage = (image: string) => `${baseURL}uploads/category/card/${image}.png`
+const getCategoryResultsImage = (image: string) => `${baseURL}uploads/category/results/${image}.png`
 
 const uploadsService = {
     getDocument,
     getPreview,
-    getCategoryImage
+    getCategoryCardImage,
+    getCategoryResultsImage
 }
 
 export default uploadsService

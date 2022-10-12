@@ -11,4 +11,4 @@ export const categories = [
     'Negocios',
     'Ciencia',
     'Tecnologia'
-]
+] as const

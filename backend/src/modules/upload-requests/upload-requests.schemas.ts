@@ -15,7 +15,7 @@ export const createUploadRequestSchema = z.object({
             .refine(
                 s => {
                     const array = s.split(',')
-                    return array.every(c => categories.includes(c))
+                    return array.every(c => categories.some(category => category === c))
                 },
                 { message: 'Las categorías no son válidas' }
             )

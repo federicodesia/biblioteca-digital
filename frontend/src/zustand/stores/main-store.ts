@@ -1,15 +1,17 @@
 import { immer } from 'zustand/middleware/immer'
 import create from "zustand"
 import { Category, DocumentData } from "../../interfaces"
-import { fetchDocuments } from '../../services/documents-service'
-import { fetchCategories } from '../../services/categories-service'
+import { DocumentsResponse, fetchDocuments, FetchDocumentsProps } from '../../services/documents-service'
+import { fetchCategories, getCategory, GetCategoryResponse } from '../../services/categories-service'
 
 interface MainState {
     categories: {
         items: Category[]
         fetch: () => void
+        get: (id: number) => Promise<GetCategoryResponse>
     },
     documents: {
+        fetch: (props: FetchDocumentsProps) => Promise<DocumentsResponse>
         latest: {
             items: DocumentData[],
             fetch: () => void
@@ -27,8 +29,14 @@ const useMainStore = create<MainState>()(
                     state.categories.items = response.data.categories
                 })
             },
+            get: async (id) => {
+                return await getCategory(id)
+            }
         },
         documents: {
+            fetch: async (props) => {
+                return await fetchDocuments(props)
+            },
             latest: {
                 items: [],
                 fetch: async () => {

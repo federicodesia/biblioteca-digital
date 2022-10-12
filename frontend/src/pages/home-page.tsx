@@ -1,9 +1,8 @@
-import { Box, Heading, Image, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Heading, SimpleGrid, VStack } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import CategoryCard from '../components/category-card';
 import DocumentItem from '../components/document-item';
 import FeaturedDocument from '../components/featured-document';
-import uploadsService from '../services/uploads-service';
 import useMainStore from '../zustand/stores/main-store';
 
 const HomePage = () => {

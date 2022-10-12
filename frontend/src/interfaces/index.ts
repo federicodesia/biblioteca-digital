@@ -56,6 +56,10 @@ export interface DocumentData {
         name: string
         lastname: string
     }
+    categories: {
+        id: number
+        name: string
+    }[]
     publishedAt?: string
     fileName?: string
 }
