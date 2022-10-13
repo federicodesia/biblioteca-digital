@@ -35,7 +35,7 @@ router.get('/documents/:fileName', async (req, res) => {
         where: { fileName: fileName.split('.').at(0) }
     })
 
-    if (document) {
+    if (document && document.publishedAt) {
         const updated = await prismaClient.document.update({
             where: { id: document.id },
             data: { downloads: { increment: 1 } }

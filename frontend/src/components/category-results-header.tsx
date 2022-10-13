@@ -42,7 +42,7 @@ const CategoryResultsHeader = ({ category, resultsCount }: Props) => {
                 {`Documentos de ${category.name}`}
             </Heading>
             <Text>
-                {`Se encontraron ${pluralize(resultsCount, 'resultado')}`}
+                {`Se ${pluralize(resultsCount, 'encontró', 'encontraron', false)} ${pluralize(resultsCount, 'resultado')}`}
             </Text>
         </VStack>
     </Box>

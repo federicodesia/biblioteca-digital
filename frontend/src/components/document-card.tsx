@@ -7,13 +7,14 @@ interface Props extends ImageProps {
 
 const DocumentCard = ({ fileName, ...rest }: Props) => {
     return <Image
-        h='200px'
-        w='150px'
+        h={{ base: '150px', md: '200px' }}
+        w={{ base: '112px', md: '150px' }}
         bg='gray.200'
         rounded='lg'
         borderStyle='solid'
         borderWidth='1px'
         borderColor='gray.200'
+        objectFit='cover'
         src={fileName ? uploadsService.getPreview(fileName) : undefined}
         {...rest} />
 }
