@@ -19,7 +19,7 @@ const HomePage = () => {
     mostDownloaded.fetch()
   }, [])
 
-  const featuredDocument = mostDownloaded.items.at(1)
+  const featuredDocument = mostDownloaded.items.at(0)
 
   return <VStack align='stretch' spacing='12'>
 

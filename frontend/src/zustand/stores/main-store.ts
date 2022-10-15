@@ -19,6 +19,14 @@ interface MainState {
         mostDownloaded: {
             items: DocumentData[],
             fetch: () => void
+        },
+        search: {
+            items: DocumentData[],
+            filters: {
+                q: string
+            },
+            update: (q: string) => void
+            fetch: () => void
         }
     }
 }
@@ -58,6 +66,26 @@ const useMainStore = create<MainState>()(
                         state.documents.mostDownloaded.items = response.data.documents
                     })
                 },
+            },
+            search: {
+                items: [],
+                filters: {
+                    q: ''
+                },
+                update: (q: string) => {
+                    set((state) => {
+                        state.documents.search.filters.q = q
+                        if (q === '') state.documents.search.items = []
+                    })
+                    if (q !== '') get().documents.search.fetch()
+                },
+                fetch: async () => {
+                    const filters = get().documents.search.filters
+                    const response = await fetchDocuments(filters)
+                    if (!response.errorType) set((state) => {
+                        state.documents.search.items = response.data.documents
+                    })
+                }
             }
         }
     }))

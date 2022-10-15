@@ -7,7 +7,7 @@ import { Category } from "../interfaces"
 import { DocumentsResponse } from "../services/documents-service"
 import useMainStore from "../zustand/stores/main-store"
 
-const CategoryResultsPage = () => {
+const CategoryPage = () => {
     const { id } = useParams()
     const navigate = useNavigate()
 
@@ -63,4 +63,4 @@ const CategoryResultsPage = () => {
     </VStack>
 }
 
-export default CategoryResultsPage
+export default CategoryPage

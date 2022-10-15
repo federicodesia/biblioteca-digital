@@ -5,10 +5,11 @@ import RegisterForm from "./components/forms/register-form"
 import VerificationForm from "./components/forms/verification-form"
 import ProtectedRoute from "./components/protected-route"
 import AccessCodesPage from "./pages/access-codes-page"
-import CategoryResultsPage from "./pages/category-results-page"
+import CategoryPage from "./pages/category-page"
 import HomePage from "./pages/home-page"
 import MainPage from "./pages/main-page"
 import MyDocumentsPage from "./pages/my-documents-page"
+import SearchPage from "./pages/search-page"
 import UploadRequestsPage from "./pages/upload-requests-page"
 import UsersPage from "./pages/users-page"
 import WelcomePage from "./pages/welcome-page"
@@ -33,7 +34,8 @@ function App() {
       <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<MainPage children={<HomePage />} />} />
         <Route path="/my-documents" element={<MainPage children={<MyDocumentsPage />} />} />
-        <Route path="/category/:id" element={<MainPage children={<CategoryResultsPage />} />} />
+        <Route path="/category/:id" element={<MainPage children={<CategoryPage />} />} />
+        <Route path="/search/:q" element={<MainPage children={<SearchPage />} />} />
       </Route>
 
       <Route element={<ProtectedRoute requiredRoles={['Profesor', 'Administrador']} />}>
