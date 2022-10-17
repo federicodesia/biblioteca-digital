@@ -1,8 +1,10 @@
-import { Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { HiOutlineDownload, HiOutlineShare, HiOutlineTag } from "react-icons/hi"
 import { useNavigate, useParams } from "react-router-dom"
+import { SizeMe } from "react-sizeme"
 import DocumentCard from "../components/document-card"
+import PDFDocumentPreview from "../components/pdf-document-preview"
 import { DocumentData } from "../interfaces"
 import { formatDate } from "../utils/date"
 import useMainStore from "../zustand/stores/main-store"
@@ -28,7 +30,7 @@ const DocumentPage = () => {
     const { title, description, publishedAt, categories, createdBy, downloads, fileName } = document
     const { name, lastname } = createdBy
 
-    return <Flex direction='row'>
+    return <Flex direction='column' gap='16'>
 
         <Flex
             direction={{ base: 'column', lg: 'row' }}
@@ -102,6 +104,21 @@ const DocumentPage = () => {
                 </VStack>
             </VStack>
         </Flex>
+
+        <HStack justify='center'>
+            <Box w='full' maxW='2xl'>
+                <SizeMe>
+                    {
+                        ({ size }) => (
+                            <PDFDocumentPreview
+                                fileName={fileName}
+                                maxPages={4}
+                                width={size.width ?? 1} />
+                        )
+                    }
+                </SizeMe>
+            </Box>
+        </HStack>
     </Flex>
 }
 
