@@ -6,6 +6,7 @@ import VerificationForm from "./components/forms/verification-form"
 import ProtectedRoute from "./components/protected-route"
 import AccessCodesPage from "./pages/access-codes-page"
 import CategoryPage from "./pages/category-page"
+import DocumentPage from "./pages/document-page"
 import HomePage from "./pages/home-page"
 import MainPage from "./pages/main-page"
 import MyDocumentsPage from "./pages/my-documents-page"
@@ -35,6 +36,7 @@ function App() {
         <Route path="/home" element={<MainPage children={<HomePage />} />} />
         <Route path="/my-documents" element={<MainPage children={<MyDocumentsPage />} />} />
         <Route path="/category/:id" element={<MainPage children={<CategoryPage />} />} />
+        <Route path="/document/:id" element={<MainPage children={<DocumentPage />} />} />
         <Route path="/search/:q" element={<MainPage children={<SearchPage />} />} />
       </Route>
 

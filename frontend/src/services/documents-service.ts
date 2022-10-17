@@ -18,3 +18,8 @@ export const fetchDocuments = async (params: FetchDocumentsProps) => {
         params: params
     }))
 }
+
+export type DocumentResponse = ResponseType<DocumentData>
+export const fetchDocument = async (id: number) => {
+    return await request(() => accessTokenApi.get<DocumentResponse>(`/documents/${id}`))
+}

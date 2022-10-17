@@ -3,17 +3,20 @@ import { HiOutlineDownload, HiOutlineTag } from "react-icons/hi";
 import { DocumentData } from "../interfaces"
 import pluralize from "../utils/pluralize";
 import DocumentCard from "./document-card";
+import Link from "./link";
 
 interface Props {
     document: DocumentData
 }
 
 const DocumentItem = ({ document }: Props) => {
-    const { title, description, createdBy, fileName, categories, downloads } = document
+    const { id, title, description, createdBy, fileName, categories, downloads } = document
     const { name, lastname } = createdBy
 
     return <HStack align='stretch' spacing='8' wordBreak='break-word'>
-        <DocumentCard fileName={fileName} />
+        <Link to={`/document/${id}`}>
+            <DocumentCard fileName={fileName} />
+        </Link>
 
         <VStack
             flex='1'
@@ -23,7 +26,10 @@ const DocumentItem = ({ document }: Props) => {
             spacing='8'>
 
             <VStack align='start' maxW='3xl'>
-                <Text fontWeight='semibold'>{title}</Text>
+                <Link to={`/document/${id}`}>
+                    <Text fontWeight='semibold'>{title}</Text>
+                </Link>
+
                 <Text>{description}</Text>
             </VStack>
 
@@ -38,14 +44,12 @@ const DocumentItem = ({ document }: Props) => {
                         </Text>
                     </HStack>
 
-                    {
-                        categories.length > 0 && <HStack flexShrink={0}>
-                            <HiOutlineTag />
-                            <Text noOfLines={1}>
-                                {categories.map(c => c.name).join(', ')}
-                            </Text>
-                        </HStack>
-                    }
+                    <HStack flexShrink={0}>
+                        <HiOutlineTag />
+                        <Text noOfLines={1}>
+                            {categories.map(c => c.name).join(', ')}
+                        </Text>
+                    </HStack>
                 </Flex>
             </VStack>
         </VStack>

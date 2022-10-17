@@ -12,3 +12,9 @@ export const searchDocumentSchema = z.object({
         limit: z.string({ required_error: 'Ingresa la cantidad de resultados' }).optional()
     })
 })
+
+export const getDocumentSchema = z.object({
+    params: z.object({
+        id: z.string({ required_error: 'Ingresa el ID del documento' })
+    })
+})

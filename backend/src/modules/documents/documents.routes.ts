@@ -3,8 +3,10 @@ import { Router } from "express"
 import { prismaClient } from "../.."
 import { authGuardAccessToken } from "../../middleware/auth-guard"
 import { documentInclude } from "../../types/prisma"
+import { CustomException } from "../../utils/custom-exception"
+import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
-import { searchDocumentSchema } from "./documents.schemas"
+import { getDocumentSchema, searchDocumentSchema } from "./documents.schemas"
 
 const router = Router()
 router.use(authGuardAccessToken)
@@ -58,6 +60,23 @@ router.get('/', async (req, res) => {
     return res.json({
         documents: result
     })
+})
+
+router.get('/:id', async (req, res) => {
+    const { params } = await schemaValidator(getDocumentSchema, req)
+    const { id } = params
+
+    const document = await prismaClient.document.findUnique({
+        where: { id: parseInt(id) },
+        include: documentInclude
+    })
+
+    if (!document || !document.publishedAt) throw new CustomException(
+        HTTPStatusCode.NOT_FOUND,
+        'No se encontró el documento'
+    )
+
+    return res.json(document)
 })
 
 export default router
