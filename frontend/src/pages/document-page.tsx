@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
+import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
-import { HiOutlineDownload, HiOutlineShare, HiOutlineTag } from "react-icons/hi"
+import { HiOutlineDownload, HiOutlineShare } from "react-icons/hi"
 import { useNavigate, useParams } from "react-router-dom"
 import { SizeMe } from "react-sizeme"
 import DocumentCard from "../components/document-card"
@@ -26,6 +26,11 @@ const DocumentPage = () => {
         getDocument()
     }, [])
 
+    const [documentPages, setDocumentPages] = useState<number | undefined>(undefined)
+    const onLoadDocument = (pdf: { numPages: number }) => {
+        setDocumentPages(pdf.numPages)
+    }
+
     if (!document) return <div />
     const { title, description, publishedAt, categories, createdBy, downloads, fileName } = document
     const { name, lastname } = createdBy
@@ -35,7 +40,7 @@ const DocumentPage = () => {
         <Flex
             direction={{ base: 'column', lg: 'row' }}
             gap={{ base: '6', lg: '16' }}
-            align={{ base: 'center', lg: 'start' }} >
+            align={{ base: 'center', lg: 'start' }}>
 
             <VStack flexShrink={0} align='stretch' spacing='6'>
                 <DocumentCard
@@ -46,15 +51,18 @@ const DocumentPage = () => {
                 <Show above='lg'>
                     <VStack align='stretch' spacing='3'>
                         <Button h='44px' variant='outline' leftIcon={<HiOutlineDownload />}>Descargar</Button>
-                        <Button h='44px' variant='outline' colorScheme='gray' color='gray.700' leftIcon={<HiOutlineShare />}>Compartir título</Button>
+                        <Button h='44px' variant='ghost' colorScheme='gray' color='gray.700' leftIcon={<HiOutlineShare />}>Compartir título</Button>
                     </VStack>
                 </Show>
             </VStack>
 
             <VStack
-                align={{ base: 'stretch', lg: 'start' }}
+                w='full'
+                maxW='2xl'
+                align='stretch'
                 spacing='8'
-                py='2'>
+                py='2'
+                overflow='hidden'>
 
                 <VStack align='stretch' spacing='6'>
                     <Heading
@@ -62,16 +70,21 @@ const DocumentPage = () => {
                         fontWeight='600'
                         textAlign={{ base: 'center', lg: 'left' }}
                         maxW={{ base: '450px', lg: 'none' }}
-                        m='auto'>
+                        m={{ base: 'auto', lg: '0' }}>
                         {title}
                     </Heading>
 
-                    <Hide above='lg'>
-                        <HStack justify='center' spacing='3'>
-                            <Button flex='1' h='44px' maxW='200px' variant='outline' leftIcon={<HiOutlineDownload />}>Descargar</Button>
-                            <IconButton h='44px' w='44px' variant='outline' colorScheme='gray' color='gray.700' icon={<HiOutlineShare />} aria-label='Compartir título' />
-                        </HStack>
-                    </Hide>
+                    <HStack
+                        spacing='2'
+                        justify={{ base: 'center', lg: 'start' }}>
+                        {
+                            categories.map(c => {
+                                return <Badge px='4' py='2' rounded='2xl' textTransform='none' >
+                                    {c.name}
+                                </Badge>
+                            })
+                        }
+                    </HStack>
                 </VStack>
 
                 <VStack align='start' spacing='4' maxW='2xl'>
@@ -85,40 +98,67 @@ const DocumentPage = () => {
                         <Text>{`Publicado por: ${name} ${lastname}`} </Text>
                         <Text>{`Fecha de publicación: ${publishedAt ? formatDate(publishedAt) : '-'}`} </Text>
                     </VStack>
-
-                    <VStack align='start' spacing='1' pt='4'>
-                        <HStack>
-                            <HiOutlineDownload />
-                            <Text noOfLines={1}>
-                                {`Cantidad de descargas: ${downloads}`}
-                            </Text>
-                        </HStack>
-
-                        <HStack>
-                            <HiOutlineTag />
-                            <Text noOfLines={1}>
-                                {`Categorías: ${categories.map(c => c.name).join(', ')}`}
-                            </Text>
-                        </HStack>
-                    </VStack>
                 </VStack>
+
+                <Hide above='lg'>
+                    <HStack justify='start' spacing='3'>
+                        <Button flex='1' h='44px' maxW='200px' variant='outline' leftIcon={<HiOutlineDownload />}>Descargar</Button>
+                        <IconButton h='44px' w='44px' variant='outline' colorScheme='gray' color='gray.700' icon={<HiOutlineShare />} aria-label='Compartir título' />
+                    </HStack>
+                </Hide>
+
+                <HStack bg='#F0F5FF' rounded='xl' py='4' px='6' align='stretch' justify='space-evenly'>
+                    <VStack spacing='0'>
+                        <Text fontWeight='semibold'>{documentPages ?? '-'}</Text>
+                        <Text fontSize='sm'>Páginas</Text>
+                    </VStack>
+
+                    <Box w='1px' bg='blackAlpha.200' />
+
+                    <VStack spacing='0'>
+                        <Text fontWeight='semibold'>{downloads}</Text>
+                        <Text fontSize='sm'>Descargas</Text>
+                    </VStack>
+
+                    <Box w='1px' bg='blackAlpha.200' />
+
+                    <VStack spacing='0'>
+                        <Text fontWeight='semibold'>8</Text>
+                        <Text fontSize='sm'>Me gusta</Text>
+                    </VStack>
+                </HStack>
+
+                <Show breakpoint='(min-width: 1100px)'>
+                    <SizeMe>
+                        {
+                            ({ size }) => (
+                                <PDFDocumentPreview
+                                    fileName={fileName}
+                                    pages={documentPages ?? 0}
+                                    maxPages={4}
+                                    width={size.width ?? 1}
+                                    onLoadSuccess={onLoadDocument} />
+                            )
+                        }
+                    </SizeMe>
+                </Show>
             </VStack>
         </Flex>
 
-        <HStack justify='center'>
-            <Box w='full' maxW='2xl'>
-                <SizeMe>
-                    {
-                        ({ size }) => (
-                            <PDFDocumentPreview
-                                fileName={fileName}
-                                maxPages={4}
-                                width={size.width ?? 1} />
-                        )
-                    }
-                </SizeMe>
-            </Box>
-        </HStack>
+        <Show breakpoint='(max-width: 1100px)'>
+            <SizeMe>
+                {
+                    ({ size }) => (
+                        <PDFDocumentPreview
+                            fileName={fileName}
+                            pages={documentPages ?? 0}
+                            maxPages={4}
+                            width={size.width ?? 1}
+                            onLoadSuccess={onLoadDocument} />
+                    )
+                }
+            </SizeMe>
+        </Show>
     </Flex>
 }
 

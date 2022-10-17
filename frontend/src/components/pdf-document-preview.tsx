@@ -1,42 +1,33 @@
 import { Box, Button, VStack } from '@chakra-ui/react';
-import { useState } from 'react';
 import { Document, Page } from 'react-pdf';
 import uploadsService from '../services/uploads-service';
 
 import { pdfjs } from 'react-pdf';
 import EmptySpace from './empty-space';
+import clamp from '../utils/clamp';
 pdfjs.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.min.js`;
 
 interface Props {
     fileName?: string
+    pages: number
     maxPages: number
     width: number
+    onLoadSuccess: (pdf: { numPages: number }) => void
 }
 
-const PDFDocumentPreview = ({ fileName, maxPages, width }: Props) => {
-
-    const [pages, setPages] = useState({
-        complete: 0,
-        showing: 0
-    })
-
-    const onLoadDocument = (pdf: { numPages: number }) => {
-        const pages = pdf.numPages
-        setPages({
-            complete: pages,
-            showing: pages > maxPages ? maxPages : pages
-        })
-    }
+const PDFDocumentPreview = ({ fileName, pages, maxPages, width, onLoadSuccess }: Props) => {
+    const showingPages = clamp(pages, 0, maxPages)
 
     return <Document
         file={fileName ? uploadsService.getDocument(fileName) : undefined}
-        onLoadSuccess={onLoadDocument}>
+        loading='Cargando documento...'
+        onLoadSuccess={onLoadSuccess}>
 
         <VStack spacing='4'>
             {
-                [...Array(pages.showing)].map((_, index) => {
-                    const isBlurPage = pages.showing < pages.complete
-                        ? index + 1 === pages.showing
+                [...Array(showingPages)].map((_, index) => {
+                    const isBlurPage = showingPages < pages
+                        ? index + 1 === showingPages
                         : false
 
                     return <Box
