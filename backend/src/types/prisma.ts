@@ -15,6 +15,12 @@ export const documentInclude: Prisma.DocumentInclude = {
             id: true,
             name: true
         }
+    },
+    Opinion: {
+        select: {
+            userId: true,
+            like: true
+        }
     }
 }
 

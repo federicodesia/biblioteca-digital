@@ -18,3 +18,13 @@ export const getDocumentSchema = z.object({
         id: z.string({ required_error: 'Ingresa el ID del documento' })
     })
 })
+
+export const likeDislikeDocumentSchema = z.object({
+    body: z.object({
+        id: z.number({ required_error: 'Ingresa el ID del documento' })
+            .int({ message: 'Debe ser un número entero' })
+            .positive({ message: 'Debe ser un número positivo' }),
+        like: z.boolean({ required_error: 'Indica si te gusta el documento' })
+            .optional()
+    })
+})

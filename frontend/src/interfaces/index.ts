@@ -63,6 +63,10 @@ export interface DocumentData {
     publishedAt?: string
     fileName?: string
     downloads: number
+    Opinion: {
+        userId: number
+        like: boolean
+    }[]
 }
 
 export interface UploadRequest {

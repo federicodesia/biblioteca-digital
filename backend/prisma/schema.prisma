@@ -32,6 +32,7 @@ model User {
   UserSession   UserSession[]
   Document      Document[]
   UploadRequest UploadRequest[]
+  Opinion       Opinion[]
 }
 
 model AccessCode {
@@ -65,6 +66,17 @@ model Document {
   downloads     Int            @default(0)
   UploadRequest UploadRequest?
   categories    Category[]
+  Opinion       Opinion[]
+}
+
+model Opinion {
+  document   Document @relation(fields: [documentId], references: [id])
+  documentId Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  like       Boolean
+
+  @@id([documentId, userId])
 }
 
 model Category {

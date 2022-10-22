@@ -4,9 +4,10 @@ import { prismaClient } from "../.."
 import { authGuardAccessToken } from "../../middleware/auth-guard"
 import { documentInclude } from "../../types/prisma"
 import { CustomException } from "../../utils/custom-exception"
+import extractUser from "../../utils/extract-user"
 import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
-import { getDocumentSchema, searchDocumentSchema } from "./documents.schemas"
+import { getDocumentSchema, likeDislikeDocumentSchema, searchDocumentSchema } from "./documents.schemas"
 
 const router = Router()
 router.use(authGuardAccessToken)
@@ -76,6 +77,58 @@ router.get('/:id', async (req, res) => {
         'No se encontró el documento'
     )
 
+    return res.json(document)
+})
+
+router.post('/likeOrDislike', async (req, res) => {
+    const { body } = await schemaValidator(likeDislikeDocumentSchema, req)
+    const { id, like } = body
+    const { user } = extractUser(req)
+
+    if (like !== undefined) {
+        const document = await prismaClient.document.update({
+            where: { id: id },
+            data: {
+                Opinion: {
+                    upsert: {
+                        where: {
+                            documentId_userId: {
+                                documentId: id,
+                                userId: user.id
+                            }
+                        },
+                        create: {
+                            user: {
+                                connect: { id: user.id }
+                            },
+                            like: like
+                        },
+                        update: {
+                            like: like
+                        }
+                    }
+                }
+            },
+            include: documentInclude
+        })
+
+        return res.json(document)
+    }
+
+    const document = await prismaClient.document.update({
+        where: { id: id },
+        data: {
+            Opinion: {
+                delete: {
+                    documentId_userId: {
+                        documentId: id,
+                        userId: user.id
+                    }
+                }
+            }
+        },
+        include: documentInclude
+    })
     return res.json(document)
 })
 

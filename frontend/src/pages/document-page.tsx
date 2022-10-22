@@ -1,9 +1,10 @@
 import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { HiOutlineDownload, HiOutlineShare } from "react-icons/hi"
 import { useNavigate, useParams } from "react-router-dom"
 import { SizeMe } from "react-sizeme"
 import DocumentCard from "../components/document-card"
+import DocumentOpinion from "../components/document-opinion"
 import PDFDocumentPreview from "../components/pdf-document-preview"
 import { DocumentData } from "../interfaces"
 import { formatDate } from "../utils/date"
@@ -30,6 +31,10 @@ const DocumentPage = () => {
     const onLoadDocument = (pdf: { numPages: number }) => {
         setDocumentPages(pdf.numPages)
     }
+
+    const likesCount = useMemo(() => {
+        return document?.Opinion.filter(opinion => opinion.like === true).length
+    }, [document])
 
     if (!document) return <div />
     const { title, description, publishedAt, categories, createdBy, downloads, fileName } = document
@@ -79,7 +84,9 @@ const DocumentPage = () => {
                         justify={{ base: 'center', lg: 'start' }}>
                         {
                             categories.map(c => {
-                                return <Badge px='4' py='2' rounded='2xl' textTransform='none' >
+                                return <Badge
+                                    key={`CategoryBadge ${c.id}`}
+                                    px='4' py='2' rounded='2xl' textTransform='none' >
                                     {c.name}
                                 </Badge>
                             })
@@ -123,7 +130,7 @@ const DocumentPage = () => {
                     <Box w='1px' bg='blackAlpha.200' />
 
                     <VStack spacing='0'>
-                        <Text fontWeight='semibold'>8</Text>
+                        <Text fontWeight='semibold'>{likesCount ?? '-'}</Text>
                         <Text fontSize='sm'>Me gusta</Text>
                     </VStack>
                 </HStack>
@@ -141,6 +148,10 @@ const DocumentPage = () => {
                             )
                         }
                     </SizeMe>
+
+                    <DocumentOpinion
+                        document={document}
+                        onUpdated={(updated) => setDocument(updated)} />
                 </Show>
             </VStack>
         </Flex>
@@ -158,6 +169,10 @@ const DocumentPage = () => {
                     )
                 }
             </SizeMe>
+
+            <DocumentOpinion
+                document={document}
+                onUpdated={(updated) => setDocument(updated)} />
         </Show>
     </Flex>
 }

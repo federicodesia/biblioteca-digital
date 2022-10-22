@@ -23,3 +23,10 @@ export type DocumentResponse = ResponseType<DocumentData>
 export const fetchDocument = async (id: number) => {
     return await request(() => accessTokenApi.get<DocumentResponse>(`/documents/${id}`))
 }
+
+export const likeOrDislikeDocument = async (data: {
+    id: number,
+    like?: boolean
+}) => {
+    return await request(() => accessTokenApi.post<DocumentResponse>('/documents/likeOrDislike', data))
+}
