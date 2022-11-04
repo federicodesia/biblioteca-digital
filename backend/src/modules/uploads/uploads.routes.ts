@@ -1,4 +1,4 @@
-import { Response, Router } from "express"
+import { Request, Response, Router } from "express"
 import { CustomException } from "../../utils/custom-exception"
 import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
@@ -8,15 +8,19 @@ import { prismaClient } from "../.."
 
 const router = Router()
 
-const getFile = ({ res, path, contentType, notFound }: {
+const getFile = ({ res, path, contentType, contentDisposition, notFound }: {
     res: Response,
     path: string,
     contentType: string,
+    contentDisposition?: string
     notFound: string
 }) => {
     try {
         const file = fs.readFileSync(path)
-        res.writeHead(200, { 'Content-type': contentType })
+        res.writeHead(200, {
+            'Content-type': contentType,
+            ...(contentDisposition && { 'Content-disposition': contentDisposition })
+        })
         return res.end(file)
     }
     catch (e) {
@@ -27,7 +31,11 @@ const getFile = ({ res, path, contentType, notFound }: {
     }
 }
 
-router.get('/documents/:fileName', async (req, res) => {
+const getDocument = async (
+    req: Request,
+    res: Response,
+    download: boolean
+) => {
     const { params } = await schemaValidator(getUploadSchema, req)
     const { fileName } = params
 
@@ -46,8 +54,17 @@ router.get('/documents/:fileName', async (req, res) => {
         res,
         path: `uploads/documents/${fileName}`,
         contentType: 'application/pdf',
+        contentDisposition: download ? `attachment; filename="${document?.title}.pdf"` : undefined,
         notFound: 'No se encontró el documento'
     })
+}
+
+router.get('/documents/:fileName', async (req, res) => {
+    return getDocument(req, res, false)
+})
+
+router.get('/download-document/:fileName', async (req, res) => {
+    return getDocument(req, res, true)
 })
 
 router.get('/previews/:fileName', async (req, res) => {

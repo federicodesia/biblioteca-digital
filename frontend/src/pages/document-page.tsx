@@ -1,12 +1,13 @@
-import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, VStack } from "@chakra-ui/react"
+import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, useClipboard, useToast, VStack } from "@chakra-ui/react"
 import { useEffect, useMemo, useState } from "react"
 import { HiOutlineDownload, HiOutlineShare } from "react-icons/hi"
-import { useNavigate, useParams } from "react-router-dom"
+import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { SizeMe } from "react-sizeme"
 import DocumentCard from "../components/document-card"
 import DocumentOpinion from "../components/document-opinion"
 import PDFDocumentPreview from "../components/pdf-document-preview"
 import { DocumentData } from "../interfaces"
+import uploadsService from "../services/uploads-service"
 import { formatDate } from "../utils/date"
 import useMainStore from "../zustand/stores/main-store"
 
@@ -36,6 +37,26 @@ const DocumentPage = () => {
         return document?.Opinion.filter(opinion => opinion.like === true).length
     }, [document])
 
+    const location = useLocation()
+    const currentUrl = `http://127.0.0.1:5173${location.pathname}`
+    const { onCopy } = useClipboard(currentUrl)
+
+    const toast = useToast()
+    const handleCopyToClipboard = () => {
+        if (!document) return
+        onCopy()
+
+        if (toast.isActive(currentUrl)) return
+        toast({
+            id: currentUrl,
+            description: "Enlace copiado al portapapeles!",
+            status: 'success',
+            duration: 3000,
+            position: 'bottom-left',
+            variant: 'subtle'
+        })
+    }
+
     if (!document) return <div />
     const { title, description, publishedAt, categories, createdBy, downloads, fileName } = document
     const { name, lastname } = createdBy
@@ -55,8 +76,27 @@ const DocumentPage = () => {
 
                 <Show above='lg'>
                     <VStack align='stretch' spacing='3'>
-                        <Button h='44px' variant='outline' leftIcon={<HiOutlineDownload />}>Descargar</Button>
-                        <Button h='44px' variant='ghost' colorScheme='gray' color='gray.700' leftIcon={<HiOutlineShare />}>Compartir título</Button>
+                        {
+                            fileName && <a href={uploadsService.getDownloadDocument(fileName)} download>
+                                <Button
+                                    h='44px'
+                                    w='full'
+                                    variant='outline'
+                                    leftIcon={<HiOutlineDownload />}>
+                                    Descargar
+                                </Button>
+                            </a>
+                        }
+
+                        <Button
+                            h='44px'
+                            variant='ghost'
+                            colorScheme='gray'
+                            color='gray.700'
+                            leftIcon={<HiOutlineShare />}
+                            onClick={handleCopyToClipboard}>
+                            Compartir título
+                        </Button>
                     </VStack>
                 </Show>
             </VStack>
@@ -109,8 +149,29 @@ const DocumentPage = () => {
 
                 <Hide above='lg'>
                     <HStack justify='start' spacing='3'>
-                        <Button flex='1' h='44px' maxW='200px' variant='outline' leftIcon={<HiOutlineDownload />}>Descargar</Button>
-                        <IconButton h='44px' w='44px' variant='outline' colorScheme='gray' color='gray.700' icon={<HiOutlineShare />} aria-label='Compartir título' />
+                        {
+                            fileName && <a href={uploadsService.getDownloadDocument(fileName)} download>
+                                <Button
+                                    flex='1'
+                                    h='44px'
+                                    px='8'
+                                    maxW='200px'
+                                    variant='outline'
+                                    leftIcon={<HiOutlineDownload />}>
+                                    Descargar
+                                </Button>
+                            </a>
+                        }
+
+                        <IconButton
+                            h='44px'
+                            w='44px'
+                            variant='outline'
+                            colorScheme='gray'
+                            color='gray.700'
+                            icon={<HiOutlineShare />}
+                            aria-label='Compartir título'
+                            onClick={handleCopyToClipboard} />
                     </HStack>
                 </Hide>
 
