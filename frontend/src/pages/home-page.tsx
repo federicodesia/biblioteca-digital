@@ -4,6 +4,7 @@ import CategoryCard from '../components/category-card';
 import DocumentItem from '../components/document-item';
 import FeaturedDocument from '../components/featured-document';
 import useMainStore from '../zustand/stores/main-store';
+import CustomCarousel from '../components/custom-carousel';
 
 const HomePage = () => {
 
@@ -19,15 +20,13 @@ const HomePage = () => {
     mostDownloaded.fetch()
   }, [])
 
-  const featuredDocument = mostDownloaded.items.at(0)
-
   return <VStack align='stretch' spacing='12'>
 
     <VStack align='stretch' spacing='8'>
       <Heading size='md' fontWeight='600'>Documento destacado</Heading>
-      {
-        featuredDocument && <FeaturedDocument document={featuredDocument} />
-      }
+      <CustomCarousel items={mostDownloaded.items.map((featuredDocument) => {
+        return <FeaturedDocument document={featuredDocument} />
+      })} />
     </VStack>
 
     <VStack align='start' spacing='8'>

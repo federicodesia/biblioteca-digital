@@ -25,6 +25,7 @@
     "react-hook-form": "^7.36.0",
     "react-icons": "^4.4.0",
     "react-pdf": "^5.7.2",
+    "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.4.1",
     "react-sizeme": "^3.0.2",
     "zod": "^3.19.1",

@@ -63,7 +63,7 @@ const useMainStore = create<MainState>()(
             mostDownloaded: {
                 items: [],
                 fetch: async () => {
-                    const response = await fetchDocuments({ orderBy: 'downloads', limit: 4 })
+                    const response = await fetchDocuments({ orderBy: 'downloads', limit: 3 })
                     if (!response.errorType) set((state) => {
                         state.documents.mostDownloaded.items = response.data.documents
                     })
