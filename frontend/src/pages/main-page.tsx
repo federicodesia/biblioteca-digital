@@ -3,6 +3,7 @@ import { Box, Drawer, DrawerContent, useDisclosure, useMediaQuery, VStack, HStac
 import { down } from '../theme/breakpoints';
 import Navbar from '../components/navbar';
 import Sidebar from '../components/sidebar';
+import { useLocation } from 'react-router-dom';
 
 interface MainPageProps {
     children?: ReactNode
@@ -12,7 +13,11 @@ const MainPage = ({ children }: MainPageProps) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const [isDownMd] = useMediaQuery(down('md'))
-    useEffect(() => onClose(), [isDownMd])
+    const location = useLocation()
+
+    useEffect(() => {
+        onClose()
+    }, [isDownMd, location.pathname])
 
     return <Box position='relative' minH='100vh'>
         {
