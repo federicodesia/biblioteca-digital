@@ -23,7 +23,7 @@ const HomePage = () => {
   return <VStack align='stretch' spacing='12'>
 
     <VStack align='stretch' spacing='8'>
-      <Heading size='md' fontWeight='600'>Documento destacado</Heading>
+      <Heading size='md' fontWeight='600'>Documentos destacados</Heading>
       <CustomCarousel items={mostDownloaded.items.map((featuredDocument) => {
         return <FeaturedDocument document={featuredDocument} />
       })} />
