@@ -2,10 +2,19 @@ import { PrismaClient } from '@prisma/client';
 import { categories, roles } from '../src/types';
 
 import * as bcrypt from "bcrypt";
+import fs from "fs"
 
 const prisma = new PrismaClient()
 
 async function seed() {
+
+    try{
+        fs.rmSync('uploads/documents', { recursive: true, force: true })
+        fs.rmSync('uploads/previews', { recursive: true, force: true })
+    }
+    catch(e){
+        console.log(e)
+    }
 
     await prisma.role.createMany({
         data: roles.map(role => ({
