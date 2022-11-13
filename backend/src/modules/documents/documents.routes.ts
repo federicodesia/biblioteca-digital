@@ -7,7 +7,8 @@ import { CustomException } from "../../utils/custom-exception"
 import extractUser from "../../utils/extract-user"
 import HTTPStatusCode from "../../utils/http-status-code"
 import { schemaValidator } from "../../utils/schema-validator"
-import { getDocumentSchema, likeDislikeDocumentSchema, searchDocumentSchema } from "./documents.schemas"
+import { deleteDocumentSchema, getDocumentSchema, likeDislikeDocumentSchema, searchDocumentSchema } from "./documents.schemas"
+import fs from "fs"
 
 const router = Router()
 router.use(authGuardAccessToken)
@@ -43,8 +44,8 @@ router.get('/', async (req, res) => {
                     createdById: filterByUserId ? parseInt(filterByUserId) : undefined
                 },
                 {
-                    categories: filterByCategoryId ? {
-                        some: { id: parseInt(filterByCategoryId) }
+                    DocumentCategory: filterByCategoryId ? {
+                        some: { categoryId: parseInt(filterByCategoryId) }
                     } : undefined
                 },
                 {
@@ -78,6 +79,41 @@ router.get('/:id', async (req, res) => {
     )
 
     return res.json(document)
+})
+
+router.delete('/:id', async (req, res) => {
+    const { params } = await schemaValidator(deleteDocumentSchema, req)
+    const { id } = params
+    const documentId = parseInt(id)
+    const { user, userRole } = extractUser(req)
+
+    const document = await prismaClient.document.findUnique({
+        where: { id: documentId },
+        include: documentInclude
+    })
+
+    if (!document) throw new CustomException(
+        HTTPStatusCode.NOT_FOUND,
+        'No se encontró el documento'
+    )
+
+    if (document.createdById !== user.id || userRole !== 'Administrador') throw new CustomException(
+        HTTPStatusCode.UNAUTHORIZED,
+        'No tienes permisos para realizar esta acción'
+    )
+
+    const deletedDocument = await prismaClient.document.delete({
+        where: { id: documentId },
+        include: documentInclude
+    })
+
+    const { fileName } = deletedDocument
+    if (fileName) {
+        fs.unlinkSync(`uploads/documents/${fileName}.pdf`)
+        fs.unlinkSync(`uploads/previews/${fileName}.png`)
+    }
+
+    return res.json(deletedDocument)
 })
 
 router.post('/likeOrDislike', async (req, res) => {

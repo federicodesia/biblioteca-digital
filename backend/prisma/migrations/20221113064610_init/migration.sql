@@ -80,6 +80,14 @@ CREATE TABLE `Category` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `DocumentCategory` (
+    `documentId` INTEGER NOT NULL,
+    `categoryId` INTEGER NOT NULL,
+
+    PRIMARY KEY (`documentId`, `categoryId`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `UploadRequestState` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(32) NOT NULL,
@@ -100,15 +108,6 @@ CREATE TABLE `UploadRequest` (
 
     UNIQUE INDEX `UploadRequest_documentId_key`(`documentId`),
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `_CategoryToDocument` (
-    `A` INTEGER NOT NULL,
-    `B` INTEGER NOT NULL,
-
-    UNIQUE INDEX `_CategoryToDocument_AB_unique`(`A`, `B`),
-    INDEX `_CategoryToDocument_B_index`(`B`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
@@ -136,16 +135,16 @@ ALTER TABLE `Opinion` ADD CONSTRAINT `Opinion_documentId_fkey` FOREIGN KEY (`doc
 ALTER TABLE `Opinion` ADD CONSTRAINT `Opinion_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `UploadRequest` ADD CONSTRAINT `UploadRequest_documentId_fkey` FOREIGN KEY (`documentId`) REFERENCES `Document`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `DocumentCategory` ADD CONSTRAINT `DocumentCategory_documentId_fkey` FOREIGN KEY (`documentId`) REFERENCES `Document`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `DocumentCategory` ADD CONSTRAINT `DocumentCategory_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `UploadRequest` ADD CONSTRAINT `UploadRequest_documentId_fkey` FOREIGN KEY (`documentId`) REFERENCES `Document`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `UploadRequest` ADD CONSTRAINT `UploadRequest_statusId_fkey` FOREIGN KEY (`statusId`) REFERENCES `UploadRequestState`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `UploadRequest` ADD CONSTRAINT `UploadRequest_reviewedById_fkey` FOREIGN KEY (`reviewedById`) REFERENCES `User`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `_CategoryToDocument` ADD CONSTRAINT `_CategoryToDocument_A_fkey` FOREIGN KEY (`A`) REFERENCES `Category`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `_CategoryToDocument` ADD CONSTRAINT `_CategoryToDocument_B_fkey` FOREIGN KEY (`B`) REFERENCES `Document`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

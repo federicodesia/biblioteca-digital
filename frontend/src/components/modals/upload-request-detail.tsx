@@ -22,7 +22,7 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const { id, document, requestedAt, status, review, reviewedAt } = uploadRequest
-    const { title, description, fileName, categories } = document
+    const { title, description, fileName, DocumentCategory } = document
 
     return <>
         <Box onClick={onOpen}>
@@ -54,10 +54,10 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
 
                                 <VStack align='stretch' spacing='4'>
                                     {
-                                        categories.length > 0 && <HStack spacing='1' flexShrink={0}>
+                                        DocumentCategory.length > 0 && <HStack spacing='1' flexShrink={0}>
                                             <HiOutlineTag />
                                             <Text noOfLines={1}>
-                                                {categories.map(c => c.name).join(', ')}
+                                                {DocumentCategory.map(c => c.category.name).join(', ')}
                                             </Text>
                                         </HStack>
                                     }

@@ -84,9 +84,11 @@ router.post('/', uploadPdf.single('document'), async (req, res) => {
                 connect: { id: user.id }
             },
             fileName: fileName,
-            categories: {
-                connect: categories.split(',').map(name => ({
-                    name: name
+            DocumentCategory: {
+                create: categories.split(',').map(name => ({
+                    category: {
+                        connect: { name: name }
+                    }
                 }))
             }
         }

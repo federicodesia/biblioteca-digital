@@ -1,14 +1,16 @@
-import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Show, Text, useClipboard, useToast, VStack } from "@chakra-ui/react"
+import { Badge, Box, Button, Flex, Heading, Hide, HStack, IconButton, Menu, MenuButton, MenuItem, MenuList, Show, Text, useClipboard, useToast, VStack } from "@chakra-ui/react"
 import { useEffect, useMemo, useState } from "react"
-import { HiOutlineDownload, HiOutlineShare } from "react-icons/hi"
+import { HiOutlineDotsVertical, HiOutlineDownload, HiOutlineShare, HiOutlineTrash } from "react-icons/hi"
 import { useLocation, useNavigate, useParams } from "react-router-dom"
 import { SizeMe } from "react-sizeme"
 import DocumentCard from "../components/document-card"
 import DocumentOpinion from "../components/document-opinion"
+import DeleteDocumentModal from "../components/modals/delete-document"
 import PDFDocumentPreview from "../components/pdf-document-preview"
 import { DocumentData } from "../interfaces"
 import uploadsService from "../services/uploads-service"
 import { formatDate } from "../utils/date"
+import useAuthStore from "../zustand/stores/auth-store"
 import useMainStore from "../zustand/stores/main-store"
 
 const DocumentPage = () => {
@@ -58,7 +60,7 @@ const DocumentPage = () => {
     }
 
     if (!document) return <div />
-    const { title, description, publishedAt, categories, createdBy, downloads, fileName } = document
+    const { title, description, publishedAt, DocumentCategory, createdBy, downloads, fileName } = document
     const { name, lastname } = createdBy
 
     return <Flex direction='column' gap='16'>
@@ -110,24 +112,30 @@ const DocumentPage = () => {
                 overflow='hidden'>
 
                 <VStack align='stretch' spacing='6'>
-                    <Heading
-                        size='md'
-                        fontWeight='600'
-                        textAlign={{ base: 'center', lg: 'left' }}
-                        maxW={{ base: '450px', lg: 'none' }}
-                        m={{ base: 'auto', lg: '0' }}>
-                        {title}
-                    </Heading>
+                    <HStack spacing='8' justify='space-between' align='start'>
+                        <Heading
+                            size='md'
+                            fontWeight='600'
+                            textAlign={{ base: 'center', lg: 'left' }}
+                            maxW={{ base: '450px', lg: 'none' }}
+                            m={{ base: 'auto', lg: '0' }}>
+                            {title}
+                        </Heading>
+
+                        <Show above='lg'>
+                            <OptionsMenu document={document} />
+                        </Show>
+                    </HStack>
 
                     <HStack
                         spacing='2'
                         justify={{ base: 'center', lg: 'start' }}>
                         {
-                            categories.map(c => {
+                            DocumentCategory.map(c => {
                                 return <Badge
-                                    key={`CategoryBadge ${c.id}`}
+                                    key={`CategoryBadge ${c.category.id}`}
                                     px='4' py='2' rounded='2xl' textTransform='none' >
-                                    {c.name}
+                                    {c.category.name}
                                 </Badge>
                             })
                         }
@@ -172,6 +180,10 @@ const DocumentPage = () => {
                             icon={<HiOutlineShare />}
                             aria-label='Compartir título'
                             onClick={handleCopyToClipboard} />
+
+                        <Show below='lg'>
+                            <OptionsMenu document={document} />
+                        </Show>
                     </HStack>
                 </Hide>
 
@@ -236,6 +248,36 @@ const DocumentPage = () => {
                 onUpdated={(updated) => setDocument(updated)} />
         </Show>
     </Flex>
+}
+
+const OptionsMenu = ({ document }: { document: DocumentData }) => {
+    const user = useAuthStore((state) => state.user)
+    const show = useMemo(() => {
+        return document.createdBy.id === user?.id || user?.role.name === 'Administrador'
+    }, [document, user])
+
+    return show ? <Menu placement='bottom-end' >
+        <MenuButton>
+            <IconButton
+                h='44px'
+                w='44px'
+                variant={{ base: 'outline', lg: 'solid' }}
+                colorScheme='gray'
+                color='gray.700'
+                icon={<HiOutlineDotsVertical />}
+                aria-label='Opciones' />
+        </MenuButton>
+        <MenuList>
+            <DeleteDocumentModal
+                document={document}
+                trigger={
+                    <MenuItem gap={4}>
+                        <HiOutlineTrash />
+                        Eliminar documento
+                    </MenuItem>
+                } />
+        </MenuList>
+    </Menu> : null
 }
 
 export default DocumentPage

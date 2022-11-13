@@ -19,6 +19,12 @@ export const getDocumentSchema = z.object({
     })
 })
 
+export const deleteDocumentSchema = z.object({
+    params: z.object({
+        id: z.string({ required_error: 'Ingresa el ID del documento' })
+    })
+})
+
 export const likeDislikeDocumentSchema = z.object({
     body: z.object({
         id: z.number({ required_error: 'Ingresa el ID del documento' })

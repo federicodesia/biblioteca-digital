@@ -1,7 +1,7 @@
 import { immer } from 'zustand/middleware/immer'
 import create from "zustand"
 import { Category, DocumentData } from "../../interfaces"
-import { DocumentResponse, DocumentsResponse, fetchDocument, fetchDocuments, FetchDocumentsProps, likeOrDislikeDocument } from '../../services/documents-service'
+import { deleteDocument, DocumentResponse, DocumentsResponse, fetchDocument, fetchDocuments, FetchDocumentsProps, likeOrDislikeDocument } from '../../services/documents-service'
 import { fetchCategories, getCategory, GetCategoryResponse } from '../../services/categories-service'
 
 interface MainState {
@@ -13,6 +13,7 @@ interface MainState {
     documents: {
         fetch: (props: FetchDocumentsProps) => Promise<DocumentsResponse>
         get: (id: number) => Promise<DocumentResponse>
+        delete: (id: number) => Promise<DocumentResponse>
         likeOrDislike: (id: number, like?: boolean) => Promise<DocumentResponse>
         latest: {
             items: DocumentData[],
@@ -50,6 +51,7 @@ const useMainStore = create<MainState>()(
         documents: {
             fetch: async (props) => await fetchDocuments(props),
             get: async (id) => await fetchDocument(id),
+            delete: async (id) => await deleteDocument(id),
             likeOrDislike: async (id, like) => await likeOrDislikeDocument({ id, like }),
             latest: {
                 items: [],

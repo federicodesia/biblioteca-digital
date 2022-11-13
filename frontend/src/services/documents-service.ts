@@ -24,6 +24,10 @@ export const fetchDocument = async (id: number) => {
     return await request(() => accessTokenApi.get<DocumentResponse>(`/documents/${id}`))
 }
 
+export const deleteDocument = async (id: number) => {
+    return await request(() => accessTokenApi.delete<DocumentResponse>(`/documents/${id}`))
+}
+
 export const likeOrDislikeDocument = async (data: {
     id: number,
     like?: boolean

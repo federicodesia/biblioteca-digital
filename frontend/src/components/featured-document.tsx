@@ -11,7 +11,7 @@ interface Props {
 }
 
 const FeaturedDocument = ({ document }: Props) => {
-    const { id, title, description, fileName, downloads, categories, createdBy } = document
+    const { id, title, description, fileName, downloads, DocumentCategory, createdBy } = document
     const { name, lastname } = createdBy
 
     return <Link to={`/document/${id}`}>
@@ -67,10 +67,10 @@ const FeaturedDocument = ({ document }: Props) => {
                                     </HStack>
 
                                     {
-                                        categories.length > 0 && <HStack flexShrink={0}>
+                                        DocumentCategory.length > 0 && <HStack flexShrink={0}>
                                             <HiOutlineTag />
                                             <Text noOfLines={1}>
-                                                {categories.map(c => c.name).join(', ')}
+                                                {DocumentCategory.map(c => c.category.name).join(', ')}
                                             </Text>
                                         </HStack>
                                     }

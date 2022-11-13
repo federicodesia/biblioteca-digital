@@ -10,10 +10,14 @@ export const documentInclude: Prisma.DocumentInclude = {
     createdBy: {
         select: userSelect
     },
-    categories: {
+    DocumentCategory: {
         select: {
-            id: true,
-            name: true
+            category: {
+                select: {
+                    id: true,
+                    name: true
+                }
+            }
         }
     },
     Opinion: {

@@ -10,7 +10,7 @@ interface Props {
 }
 
 const DocumentItem = ({ document }: Props) => {
-    const { id, title, description, createdBy, fileName, categories, downloads } = document
+    const { id, title, description, createdBy, fileName, DocumentCategory, downloads } = document
     const { name, lastname } = createdBy
 
     return <HStack align='stretch' spacing='8' wordBreak='break-word'>
@@ -47,7 +47,7 @@ const DocumentItem = ({ document }: Props) => {
                     <HStack flexShrink={0}>
                         <HiOutlineTag />
                         <Text noOfLines={1}>
-                            {categories.map(c => c.name).join(', ')}
+                            {DocumentCategory.map(c => c.category.name).join(', ')}
                         </Text>
                     </HStack>
                 </Flex>

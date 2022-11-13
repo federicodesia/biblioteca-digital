@@ -56,17 +56,17 @@ model UserSession {
 }
 
 model Document {
-  id            Int            @id @default(autoincrement())
-  title         String         @db.VarChar(128)
-  description   String         @db.VarChar(256)
-  createdBy     User           @relation(fields: [createdById], references: [id])
-  createdById   Int
-  publishedAt   DateTime?
-  fileName      String?        @db.VarChar(64)
-  downloads     Int            @default(0)
-  UploadRequest UploadRequest?
-  categories    Category[]
-  Opinion       Opinion[]
+  id               Int                @id @default(autoincrement())
+  title            String             @db.VarChar(128)
+  description      String             @db.VarChar(256)
+  createdBy        User               @relation(fields: [createdById], references: [id])
+  createdById      Int
+  publishedAt      DateTime?
+  fileName         String?            @db.VarChar(64)
+  downloads        Int                @default(0)
+  UploadRequest    UploadRequest?
+  Opinion          Opinion[]
+  DocumentCategory DocumentCategory[]
 }
 
 model Opinion {
@@ -80,10 +80,19 @@ model Opinion {
 }
 
 model Category {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique @db.VarChar(64)
-  image     String     @db.VarChar(64)
-  documents Document[]
+  id               Int                @id @default(autoincrement())
+  name             String             @unique @db.VarChar(64)
+  image            String             @db.VarChar(64)
+  DocumentCategory DocumentCategory[]
+}
+
+model DocumentCategory {
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  documentId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@id([documentId, categoryId])
 }
 
 model UploadRequestState {
@@ -94,7 +103,7 @@ model UploadRequestState {
 
 model UploadRequest {
   id           Int                @id @default(autoincrement())
-  document     Document           @relation(fields: [documentId], references: [id])
+  document     Document           @relation(fields: [documentId], references: [id], onDelete: Cascade)
   documentId   Int                @unique
   requestedAt  DateTime           @default(now())
   status       UploadRequestState @relation(fields: [statusId], references: [id])
