@@ -61,7 +61,9 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         overflowY='auto'>
 
         <Flex h='20' alignItems='center' mx='6' justifyContent='space-between'>
-            <Image src='/logo_cuch.png' objectFit='contain' h='58px' />
+            <Link to='/home'>
+                <Image src='/logo_cuch.png' objectFit='contain' h='58px' />
+            </Link>
 
             <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
         </Flex>

@@ -1,4 +1,4 @@
-import { Box, Modal, ModalContent, ModalOverlay, useDisclosure } from "@chakra-ui/react"
+import { Box, Modal, ModalContent, ModalOverlay, useDisclosure, useToast } from "@chakra-ui/react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ReactNode, useState } from "react"
 import { useForm } from "react-hook-form"
@@ -52,6 +52,8 @@ const StepForm = ({ onClose }: StepFormProps) => {
     })
     const { handleSubmit, trigger, setError } = form
 
+    const toast = useToast()
+
     const createUploadRequest = useUserStore((state) => state.uploadRequests.create)
     const onFinish = handleSubmit(async (data) => {
         const { title, description, categories, document } = data
@@ -71,6 +73,15 @@ const StepForm = ({ onClose }: StepFormProps) => {
             if (response.error.some(e => ['categories'].includes(e.path))) return setStep(1)
             if (response.error.some(e => ['document'].includes(e.path))) return setStep(2)
         }
+
+        if(response.errorType === 'string') toast({
+            description: response.error,
+            status: 'error',
+            duration: 5000,
+            position: 'bottom-left',
+            variant: 'subtle'
+        })
+
         return onClose()
     })
 

@@ -118,7 +118,10 @@ const DocumentPage = () => {
                             fontWeight='600'
                             textAlign={{ base: 'center', lg: 'left' }}
                             maxW={{ base: '450px', lg: 'none' }}
-                            m={{ base: 'auto', lg: '0' }}>
+                            m={{ base: 'auto', lg: '0' }}
+                            w='full'
+                            textOverflow='ellipsis'
+                            overflow='hidden'>
                             {title}
                         </Heading>
 
