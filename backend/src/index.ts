@@ -10,8 +10,9 @@ import documentsRoutes from "./modules/documents/documents.routes";
 import uploadRequestsRoutes from "./modules/upload-requests/upload-requests.routes";
 import uploadsRoutes from "./modules/uploads/uploads.routes";
 import usersRoutes from "./modules/users/users.routes";
+import envVars from "./utils/env-vars";
 
-const PORT = 3000
+const PORT = envVars.port
 const app = express()
 
 export const prismaClient = new PrismaClient();
