@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "start": "tsc && node build/src/index.js",
+    "start": "node build/src/index.js",
+    "tsc": "tsc",
     "reset": "prisma migrate reset",
     "migrate": "prisma migrate dev --name init"
   },
