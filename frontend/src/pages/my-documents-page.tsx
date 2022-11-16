@@ -46,31 +46,34 @@ const MyDocumentsPage = () => {
       </VStack>
     }
 
-    {
-      documents.length > 0 && <VStack align='start' spacing='8'>
-        <HStack w='full' justify='space-between'>
-          <Heading size='md' fontWeight='600'>Mis documentos</Heading>
-          {
-            uploadRequests.length === 0 && <CreateUploadRequestModal
-              trigger={
-                <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
-                  Solicitar carga
-                </Button>
-              } />
-          }
-        </HStack>
+    <VStack align='start' spacing='8'>
+      <HStack w='full' justify='space-between'>
+        {
+          uploadRequests.length === 0 || documents.length > 0
+            ? <Heading size='md' fontWeight='600'>Mis documentos</Heading>
+            : <div />
+        }
 
-        <VStack align='start' spacing='10'>
-          {
-            documents.map((item, index) => {
-              return <DocumentItem
-                key={`${item.id} ${index}`}
-                document={item} />
-            })
-          }
-        </VStack>
+        {
+          uploadRequests.length === 0 && <CreateUploadRequestModal
+            trigger={
+              <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+                Solicitar carga
+              </Button>
+            } />
+        }
+      </HStack>
+
+      <VStack align='start' spacing='10'>
+        {
+          documents.map((item, index) => {
+            return <DocumentItem
+              key={`${item.id} ${index}`}
+              document={item} />
+          })
+        }
       </VStack>
-    }
+    </VStack>
   </VStack>
 }
 

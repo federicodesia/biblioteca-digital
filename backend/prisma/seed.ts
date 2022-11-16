@@ -3,6 +3,7 @@ import { categories, roles } from '../src/types';
 
 import * as bcrypt from "bcrypt";
 import fs from "fs"
+import envVars from '../src/utils/env-vars';
 
 const prisma = new PrismaClient()
 
@@ -22,12 +23,12 @@ async function seed() {
         }))
     })
 
-    const hashedPassword = await bcrypt.hash('password', 10);
+    const hashedPassword = await bcrypt.hash(envVars.adminPassword, 10);
     await prisma.user.create({
         data: {
             name: 'Usuario',
             lastname: 'Administrador',
-            email: 'admin@gmail.com',
+            email: envVars.adminEmail,
             password: hashedPassword,
             role: {
                 connect: { name: 'Administrador' }
@@ -46,7 +47,7 @@ async function seed() {
     await prisma.category.createMany({
         data: categories.map(category => ({
             name: category,
-            image: category
+            image: category.toLocaleLowerCase()
         }))
     })
 }

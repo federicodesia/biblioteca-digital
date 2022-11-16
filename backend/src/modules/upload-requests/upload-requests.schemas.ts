@@ -20,7 +20,7 @@ export const createUploadRequestSchema = z.object({
                 { message: 'Las categorías no son válidas' }
             )
             .refine(
-                s => s.split(',').length < 3,
+                s => s.split(',').length <= 3,
                 { message: 'Puedes seleccionar 3 categorías como máximo' }
             )
             .refine(
