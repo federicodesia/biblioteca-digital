@@ -5,7 +5,7 @@ import uploadsService from '../services/uploads-service';
 import { pdfjs } from 'react-pdf';
 import EmptySpace from './empty-space';
 import clamp from '../utils/clamp';
-pdfjs.GlobalWorkerOptions.workerSrc = `/node_modules/pdfjs-dist/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
 
 interface Props {
     fileName?: string
