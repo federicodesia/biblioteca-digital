@@ -1,5 +1,5 @@
 import { Box, IconButton, IconButtonProps } from "@chakra-ui/react"
-import { ReactNode } from "react"
+import { ReactNode, useMemo } from "react"
 import { IoChevronBack, IoChevronForward } from "react-icons/io5"
 import { Carousel } from "react-responsive-carousel"
 import "react-responsive-carousel/lib/styles/carousel.min.css"
@@ -9,6 +9,10 @@ interface Props {
 }
 
 const CustomCarousel = ({ items }: Props) => {
+    const sliderItems = useMemo(() => {
+        return [...items].reverse()
+    }, [items])
+
     return <Box rounded='xl' overflow='hidden'>
         <Carousel
             showIndicators={false}
@@ -46,7 +50,7 @@ const CustomCarousel = ({ items }: Props) => {
                 </Box>
             }}>
             {
-                items.map((item, itemIndex) => {
+                sliderItems.map((item, itemIndex) => {
                     return <Box
                         key={`SliderItem ${itemIndex}`}>
                         {item}
