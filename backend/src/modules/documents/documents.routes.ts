@@ -97,7 +97,7 @@ router.delete('/:id', async (req, res) => {
         'No se encontró el documento'
     )
 
-    if (document.createdById !== user.id || userRole !== 'Administrador') throw new CustomException(
+    if (document.createdById !== user.id && userRole !== 'Administrador') throw new CustomException(
         HTTPStatusCode.UNAUTHORIZED,
         'No tienes permisos para realizar esta acción'
     )
