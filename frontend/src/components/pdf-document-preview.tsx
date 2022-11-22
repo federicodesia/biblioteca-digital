@@ -5,6 +5,7 @@ import uploadsService from '../services/uploads-service';
 import { pdfjs } from 'react-pdf';
 import EmptySpace from './empty-space';
 import clamp from '../utils/clamp';
+import TextButton from './text-button';
 pdfjs.GlobalWorkerOptions.workerSrc = `/pdf.worker.min.js`;
 
 interface Props {
@@ -58,9 +59,9 @@ const PDFDocumentPreview = ({ fileName, pages, maxPages, width, onLoadSuccess }:
 
                                     {
                                         fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
-                                            <Button mb='8'>
+                                            <TextButton mb='8'>
                                                 Ver documento completo
-                                            </Button>
+                                            </TextButton>
                                         </a>
                                     }
                                 </VStack>

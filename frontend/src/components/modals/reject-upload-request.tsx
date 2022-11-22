@@ -7,6 +7,7 @@ import { rejectUploadRequestSchema } from "../../schemas/upload-requests.schema"
 import setFormError from "../../utils/form-error"
 import useAdminStore from "../../zustand/stores/admin-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     uploadRequest: UploadRequest
@@ -58,8 +59,8 @@ const RejectUploadRequestModal = (props: Props) => {
                     </FormControl>
 
                     <HStack justify='end' spacing={3}>
-                        <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-                        <Button isLoading={isSubmitting} onClick={onSubmit}>Rechazar</Button>
+                        <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+                        <TextButton isLoading={isSubmitting} onClick={onSubmit}>Rechazar</TextButton>
                     </HStack>
                 </VStack>
             </ModalContent>

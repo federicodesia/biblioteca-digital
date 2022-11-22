@@ -8,6 +8,7 @@ import { registerSchema } from '../../schemas/auth.schema';
 import { useNavigate, useParams } from 'react-router-dom';
 import setFormError from '../../utils/form-error';
 import useAuthStore from '../../zustand/stores/auth-store';
+import TextButton from '../text-button';
 
 type FormValues = {
     name: string
@@ -87,9 +88,9 @@ const RegisterForm = () => {
         }
         bottom={
             <>
-                <Button colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
+                <TextButton colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
                     Registrarme
-                </Button>
+                </TextButton>
 
                 <Text color='gray.600' align='center'>
                     ¿Ya tienes una cuenta?{' '}

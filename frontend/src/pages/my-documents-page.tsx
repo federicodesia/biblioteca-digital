@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import DocumentItem from '../components/document-item';
 import CreateUploadRequestModal from '../components/modals/create-upload-request';
+import TextButton from '../components/text-button';
 import UplaodRequestItem from '../components/upload-request-item';
 import useUserStore from '../zustand/stores/user-store';
 
@@ -28,9 +29,9 @@ const MyDocumentsPage = () => {
           <Heading size='md' fontWeight='600'>Solicitudes de carga</Heading>
           <CreateUploadRequestModal
             trigger={
-              <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+              <TextButton flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
                 Solicitar carga
-              </Button>
+              </TextButton>
             } />
         </HStack>
 
@@ -57,9 +58,9 @@ const MyDocumentsPage = () => {
         {
           uploadRequests.length === 0 && <CreateUploadRequestModal
             trigger={
-              <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+              <TextButton flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
                 Solicitar carga
-              </Button>
+              </TextButton>
             } />
         }
       </HStack>

@@ -7,6 +7,7 @@ import DocumentCard from "../components/document-card"
 import DocumentOpinion from "../components/document-opinion"
 import DeleteDocumentModal from "../components/modals/delete-document"
 import PDFDocumentPreview from "../components/pdf-document-preview"
+import TextButton from "../components/text-button"
 import { DocumentData } from "../interfaces"
 import uploadsService from "../services/uploads-service"
 import { formatDate } from "../utils/date"
@@ -80,17 +81,17 @@ const DocumentPage = () => {
                     <VStack align='stretch' spacing='3'>
                         {
                             fileName && <a href={uploadsService.getDownloadDocument(fileName)} download>
-                                <Button
+                                <TextButton
                                     h='44px'
                                     w='full'
                                     variant='outline'
                                     leftIcon={<HiOutlineDownload />}>
                                     Descargar
-                                </Button>
+                                </TextButton>
                             </a>
                         }
 
-                        <Button
+                        <TextButton
                             h='44px'
                             variant='ghost'
                             colorScheme='gray'
@@ -98,7 +99,7 @@ const DocumentPage = () => {
                             leftIcon={<HiOutlineShare />}
                             onClick={handleCopyToClipboard}>
                             Compartir título
-                        </Button>
+                        </TextButton>
                     </VStack>
                 </Show>
             </VStack>
@@ -162,7 +163,7 @@ const DocumentPage = () => {
                     <HStack justify='start' spacing='3'>
                         {
                             fileName && <a href={uploadsService.getDownloadDocument(fileName)} download>
-                                <Button
+                                <TextButton
                                     flex='1'
                                     h='44px'
                                     px='8'
@@ -170,7 +171,7 @@ const DocumentPage = () => {
                                     variant='outline'
                                     leftIcon={<HiOutlineDownload />}>
                                     Descargar
-                                </Button>
+                                </TextButton>
                             </a>
                         }
 

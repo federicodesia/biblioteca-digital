@@ -9,6 +9,7 @@ import pluralize from "../../utils/pluralize"
 import useAdminStore from "../../zustand/stores/admin-store"
 import useAuthStore from "../../zustand/stores/auth-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     trigger: ReactNode
@@ -100,8 +101,8 @@ const Form = ({ onClose }: FromProps) => {
         </VStack>
 
         <HStack justify='end' spacing={3}>
-            <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-            <Button isLoading={isSubmitting} onClick={onSubmit}>Generar</Button>
+            <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+            <TextButton isLoading={isSubmitting} onClick={onSubmit}>Generar</TextButton>
         </HStack>
     </VStack>
 }

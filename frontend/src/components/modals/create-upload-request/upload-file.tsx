@@ -3,6 +3,7 @@ import { UseFormReturn } from "react-hook-form"
 import { CreateUploadRequestFormValues } from "."
 import EmptySpace from "../../empty-space"
 import FileDropzone from "../../file-dropzone"
+import TextButton from "../../text-button"
 
 interface Props {
     form: UseFormReturn<CreateUploadRequestFormValues, any>
@@ -36,8 +37,8 @@ const UploadFileForm = ({ form, onPrevious, onSubmit }: Props) => {
         </FormControl>
 
         <HStack justify='end' spacing={3}>
-            <Button variant='ghost' colorScheme='gray' onClick={onPrevious}>Volver</Button>
-            <Button isLoading={isSubmitting} onClick={handleSubmit(onSubmit)}>Solicitar carga</Button>
+            <TextButton variant='ghost' colorScheme='gray' onClick={onPrevious}>Volver</TextButton>
+            <TextButton isLoading={isSubmitting} onClick={handleSubmit(onSubmit)}>Solicitar carga</TextButton>
         </HStack>
     </VStack>
 }

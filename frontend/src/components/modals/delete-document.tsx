@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { DocumentData } from "../../interfaces"
 import useMainStore from "../../zustand/stores/main-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     document: DocumentData
@@ -49,8 +50,8 @@ const DeleteDocumentModal = ({ document, trigger }: Props) => {
                         description='¿Estás seguro que quieres eliminar este documento? Después no podrás deshacer esta acción.' />
 
                     <HStack justify='end' spacing={3}>
-                        <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-                        <Button onClick={handleDeleteClick}>Eliminar</Button>
+                        <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+                        <TextButton onClick={handleDeleteClick}>Eliminar</TextButton>
                     </HStack>
                 </VStack>
             </ModalContent>

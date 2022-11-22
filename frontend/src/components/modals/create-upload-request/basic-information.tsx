@@ -2,6 +2,7 @@ import { Button, FormControl, FormErrorMessage, FormLabel, HStack, Input, Textar
 import { UseFormReturn } from "react-hook-form"
 import { CreateUploadRequestFormValues } from "."
 import EmptySpace from "../../empty-space"
+import TextButton from "../../text-button"
 
 interface Props {
     form: UseFormReturn<CreateUploadRequestFormValues, any>
@@ -39,8 +40,8 @@ const BasicInformationForm = ({ form, onSubmit, onClose }: Props) => {
         </VStack>
 
         <HStack justify='end' spacing={3}>
-            <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-            <Button onClick={onSubmit}>Continuar</Button>
+            <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+            <TextButton onClick={onSubmit}>Continuar</TextButton>
         </HStack>
     </VStack>
 }

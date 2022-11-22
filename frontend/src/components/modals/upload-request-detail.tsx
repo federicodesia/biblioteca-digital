@@ -5,6 +5,7 @@ import { UploadRequest } from "../../interfaces"
 import uploadsService from "../../services/uploads-service"
 import { formatDate } from "../../utils/date"
 import DocumentCard from "../document-card"
+import TextButton from "../text-button"
 
 type Status = 'Esperando respuesta' | 'Aceptado' | 'Rechazado'
 const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
@@ -63,7 +64,7 @@ const UploadRequestDetailModal = ({ uploadRequest, trigger }: Props) => {
                                     }
                                     {
                                         fileName && <a href={uploadsService.getDocument(fileName)} target='_blank' >
-                                            <Button w='full' variant='outline'>Ver documento</Button>
+                                            <TextButton w='full' variant='outline'>Ver documento</TextButton>
                                         </a>
                                     }
                                 </VStack>

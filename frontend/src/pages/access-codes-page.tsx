@@ -9,6 +9,7 @@ import { AccessCode } from "../interfaces"
 import { differenceInDays, formatDate, isPast } from "../utils/date"
 import pluralize from "../utils/pluralize"
 import useAdminStore from "../zustand/stores/admin-store"
+import TextButton from "../components/text-button"
 
 type Status = 'Disponible' | 'Utilizado' | 'Expirado'
 const statusColors: Record<Status, ThemeTypings['colorSchemes']> = {
@@ -41,9 +42,9 @@ const AccessCodesPage = () => {
             </InputGroup>
 
             <GenerateAccessCodeModal trigger={
-                <Button flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
+                <TextButton flexShrink='0' leftIcon={<FiPlus />} variant='outline'>
                     Generar nuevo
-                </Button>
+                </TextButton>
             } />
         </HStack>
 

@@ -3,6 +3,7 @@ import { ReactNode } from "react"
 import { AccessCode } from "../../interfaces"
 import useAdminStore from "../../zustand/stores/admin-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     accessCode: AccessCode
@@ -35,8 +36,8 @@ const DeleteAccessCodeModal = ({ accessCode, trigger }: Props) => {
                         description='¿Estás seguro que quieres eliminar este código de acceso? Después no podrás deshacer esta acción.' />
 
                     <HStack justify='end' spacing={3}>
-                        <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-                        <Button onClick={handleDeleteClick}>Eliminar</Button>
+                        <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+                        <TextButton onClick={handleDeleteClick}>Eliminar</TextButton>
                     </HStack>
                 </VStack>
             </ModalContent>

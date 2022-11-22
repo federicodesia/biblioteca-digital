@@ -3,6 +3,7 @@ import { ReactNode } from "react"
 import { UploadRequest } from "../../interfaces"
 import useAdminStore from "../../zustand/stores/admin-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     uploadRequest: UploadRequest
@@ -35,8 +36,8 @@ const ApproveUploadRequestModal = ({ uploadRequest, trigger }: Props) => {
                         description='¿Estás seguro que quieres aceptar esta solicitud? Una vez aceptada, el documento será visible por todos los usuarios.' />
 
                     <HStack justify='end' spacing={3}>
-                        <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-                        <Button onClick={handleApproveClick}>Aceptar</Button>
+                        <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+                        <TextButton onClick={handleApproveClick}>Aceptar</TextButton>
                     </HStack>
                 </VStack>
             </ModalContent>

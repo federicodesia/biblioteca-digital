@@ -8,6 +8,7 @@ import { loginSchema } from '../../schemas/auth.schema';
 import useAuthStore from '../../zustand/stores/auth-store';
 import setFormError from '../../utils/form-error';
 import { useNavigate } from 'react-router-dom';
+import TextButton from '../text-button';
 
 type FormValues = {
     email: string
@@ -58,9 +59,9 @@ function LoginForm() {
         }
         bottom={
             <>
-                <Button colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
+                <TextButton colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
                     Iniciar sesión
-                </Button>
+                </TextButton>
 
                 <Text color='gray.600' align='center'>
                     ¿No tienes una cuenta?{' '}

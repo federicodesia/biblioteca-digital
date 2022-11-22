@@ -3,6 +3,7 @@ import { ReactNode } from "react"
 import { User } from "../../interfaces"
 import useAdminStore from "../../zustand/stores/admin-store"
 import EmptySpace from "../empty-space"
+import TextButton from "../text-button"
 
 interface Props {
     user: User
@@ -44,8 +45,8 @@ const UpdateUserStatusModal = ({ user, active, trigger }: Props) => {
                         } />
 
                     <HStack justify='end' spacing={3}>
-                        <Button variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</Button>
-                        <Button onClick={handleClick}>{active ? 'Habilitar' : 'Inhabilitar'}</Button>
+                        <TextButton variant='ghost' colorScheme='gray' onClick={onClose}>Cancelar</TextButton>
+                        <TextButton onClick={handleClick}>{active ? 'Habilitar' : 'Inhabilitar'}</TextButton>
                     </HStack>
                 </VStack>
             </ModalContent>

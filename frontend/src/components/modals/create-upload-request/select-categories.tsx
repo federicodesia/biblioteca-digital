@@ -4,6 +4,7 @@ import { Controller, UseFormReturn } from "react-hook-form"
 import { CreateUploadRequestFormValues } from "."
 import useMainStore from "../../../zustand/stores/main-store"
 import EmptySpace from "../../empty-space"
+import TextButton from "../../text-button"
 
 interface Props {
     form: UseFormReturn<CreateUploadRequestFormValues, any>
@@ -56,8 +57,8 @@ const SelectCategoriesForm = ({ form, onPrevious, onSubmit }: Props) => {
         </VStack>
 
         <HStack justify='end' spacing={3}>
-            <Button variant='ghost' colorScheme='gray' onClick={onPrevious}>Volver</Button>
-            <Button onClick={onSubmit}>Continuar</Button>
+            <TextButton variant='ghost' colorScheme='gray' onClick={onPrevious}>Volver</TextButton>
+            <TextButton onClick={onSubmit}>Continuar</TextButton>
         </HStack>
     </VStack>
 }

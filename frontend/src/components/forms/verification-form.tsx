@@ -7,6 +7,7 @@ import { verificationSchema } from '../../schemas/auth.schema';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../zustand/stores/auth-store';
 import setFormError from '../../utils/form-error';
+import TextButton from '../text-button';
 
 type FormValues = {
     code: string
@@ -44,9 +45,9 @@ const VerificationForm = () => {
         }
         bottom={
             <>
-                <Button colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
+                <TextButton colorScheme='blue' isLoading={isSubmitting} onClick={onSubmit} type='submit'>
                     Continuar
-                </Button>
+                </TextButton>
 
                 <Text color='gray.600' align='center'>
                     ¿Ya tienes una cuenta?{' '}
